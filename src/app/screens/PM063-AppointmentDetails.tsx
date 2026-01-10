@@ -1,0 +1,201 @@
+import { Button } from '../components/ui/button';
+import { ArrowLeft, Calendar, Clock, CheckCircle, MessageSquare, FileText, ClipboardList } from 'lucide-react';
+
+interface Appointment {
+  id: string;
+  providerName: string;
+  specialty: string;
+  date: string;
+  time: string;
+  status: 'confirmed' | 'pending' | 'completed';
+  rosCompleted?: boolean;
+}
+
+interface AppointmentDetailsProps {
+  appointment: Appointment;
+  onReschedule: () => void;
+  onCancel: () => void;
+  onMarkComplete?: () => void;
+  onLeaveReview?: () => void;
+  onCompleteROS?: () => void;
+  onBack: () => void;
+}
+
+export default function AppointmentDetails({ 
+  appointment, 
+  onReschedule, 
+  onCancel, 
+  onMarkComplete,
+  onLeaveReview,
+  onCompleteROS,
+  onBack 
+}: AppointmentDetailsProps) {
+  const isConfirmed = appointment.status === 'confirmed';
+  const isCompleted = appointment.status === 'completed';
+
+  // Mock ROS summary data - would come from backend in real app
+  const rosSummary = [
+    { category: 'General', symptoms: 'No significant concerns reported' },
+    { category: 'Head & Neck', symptoms: 'No headaches or neck pain' },
+    { category: 'Eyes', symptoms: 'No vision changes' },
+    { category: 'Ears, Nose & Throat', symptoms: 'No hearing issues or sore throat' },
+    { category: 'Cardiovascular', symptoms: 'No chest pain or palpitations' },
+    { category: 'Respiratory', symptoms: 'No shortness of breath' },
+    { category: 'Gastrointestinal', symptoms: 'No nausea or digestive issues' },
+    { category: 'Musculoskeletal', symptoms: 'No joint pain or muscle weakness' },
+  ];
+
+  return (
+    <div className="flex flex-col h-full bg-white">
+      {/* Header */}
+      <div className="flex items-center p-4 border-b border-[#E5E7EB]">
+        <button onClick={onBack} className="p-2">
+          <ArrowLeft className="w-6 h-6 text-[#1F2937]" />
+        </button>
+        <h2 className="text-lg font-semibold text-[#1F2937] ml-2">Appointment Details</h2>
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 overflow-y-auto pb-24">
+        {/* Provider Info */}
+        <div className="px-6 py-6 border-b border-[#E5E7EB]">
+          <div className="flex items-start gap-4 mb-4">
+            <div className="w-16 h-16 bg-[#F3F4F6] rounded-full flex items-center justify-center text-3xl">
+              👨‍⚕️
+            </div>
+            <div className="flex-1">
+              <h3 className="text-xl font-bold text-[#1F2937] mb-1">
+                {appointment.providerName}
+              </h3>
+              <p className="text-base text-[#6B7280] mb-2">
+                {appointment.specialty}
+              </p>
+              <div className={`inline-flex px-3 py-1 ${
+                appointment.status === 'confirmed' ? 'bg-[#6B7280]' :
+                appointment.status === 'pending' ? 'bg-[#9CA3AF]' :
+                'bg-[#1F2937]'
+              }/10 rounded-full`}>
+                <p className={`text-sm font-medium ${
+                  appointment.status === 'confirmed' ? 'text-[#6B7280]' :
+                  appointment.status === 'pending' ? 'text-[#9CA3AF]' :
+                  'text-[#1F2937]'
+                }`}>
+                  {appointment.status === 'confirmed' ? 'Confirmed' :
+                   appointment.status === 'pending' ? 'Pending Confirmation' :
+                   'Completed'}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Appointment Details */}
+        <div className="px-6 py-6">
+          <h3 className="text-lg font-semibold text-[#1F2937] mb-4">Details</h3>
+          
+          <div className="space-y-4">
+            <div className="flex items-start gap-3">
+              <Calendar className="w-5 h-5 text-[#6B7280] mt-0.5" />
+              <div>
+                <p className="text-sm text-[#6B7280] mb-1">Date</p>
+                <p className="text-base font-semibold text-[#1F2937]">
+                  {new Date(appointment.date).toLocaleDateString('en-US', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                  })}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <Clock className="w-5 h-5 text-[#6B7280] mt-0.5" />
+              <div>
+                <p className="text-sm text-[#6B7280] mb-1">Time</p>
+                <p className="text-base font-semibold text-[#1F2937]">{appointment.time}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ROS Summary */}
+        {appointment.rosCompleted && (
+          <div className="px-6 py-6 border-b border-[#E5E7EB]">
+            <h3 className="text-lg font-semibold text-[#1F2937] mb-4">ROS Summary</h3>
+            <div className="space-y-2">
+              {rosSummary.map((item, index) => (
+                <div key={index} className="flex items-start gap-3">
+                  <FileText className="w-5 h-5 text-[#6B7280] mt-0.5" />
+                  <div>
+                    <p className="text-sm text-[#6B7280] mb-1">{item.category}</p>
+                    <p className="text-base font-semibold text-[#1F2937]">{item.symptoms}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Action Buttons */}
+        <div className="px-6 pt-2 pb-6 space-y-3">
+          {/* Complete ROS - Only for appointments without ROS completed */}
+          {!appointment.rosCompleted && !isCompleted && onCompleteROS && (
+            <Button 
+              onClick={onCompleteROS}
+              className="w-full h-[52px] bg-[#1F2937] text-white rounded-xl text-base font-medium hover:bg-[#374151] flex items-center justify-center gap-2"
+            >
+              <ClipboardList className="w-5 h-5" />
+              Complete ROS
+            </Button>
+          )}
+
+          {/* Mark as Complete - Only for Confirmed */}
+          {isConfirmed && onMarkComplete && (
+            <Button 
+              onClick={onMarkComplete}
+              className="w-full h-[52px] bg-[#6B7280] text-white rounded-xl text-base font-medium hover:bg-[#4B5563] flex items-center justify-center gap-2"
+            >
+              <CheckCircle className="w-5 h-5" />
+              Mark as Complete
+            </Button>
+          )}
+
+          {/* Leave Review - Only for Completed */}
+          {isCompleted && onLeaveReview && (
+            <Button 
+              onClick={onLeaveReview}
+              className="w-full h-[52px] bg-[#1F2937] text-white rounded-xl text-base font-medium hover:bg-[#374151] flex items-center justify-center gap-2"
+            >
+              <MessageSquare className="w-5 h-5" />
+              Leave a Review
+            </Button>
+          )}
+
+          {/* Reschedule - Not available for Completed */}
+          {!isCompleted && (
+            <Button 
+              onClick={onReschedule}
+              variant="outline"
+              className="w-full h-[52px] border-[#E5E7EB] text-[#1F2937] rounded-xl text-base font-medium hover:bg-[#F3F4F6]"
+            >
+              <Calendar className="w-5 h-5 mr-2" />
+              Reschedule Appointment
+            </Button>
+          )}
+
+          {/* Cancel - Not available for Completed */}
+          {!isCompleted && (
+            <Button 
+              onClick={onCancel}
+              variant="outline"
+              className="w-full h-[52px] border-[#EF4444] text-[#EF4444] rounded-xl text-base font-medium hover:bg-[#EF4444]/5"
+            >
+              Cancel Appointment
+            </Button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}

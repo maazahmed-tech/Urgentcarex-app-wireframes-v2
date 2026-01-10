@@ -1,0 +1,207 @@
+import { Button } from '../components/ui/button';
+import { ArrowLeft, MessageSquare, Trash2, Eye, Clock, Home, Calendar, History, User } from 'lucide-react';
+
+export interface Message {
+  id: string;
+  text: string;
+  sender: 'ai' | 'user';
+  timestamp: Date;
+  options?: string[];
+}
+
+export interface ChatSession {
+  sessionId: string;
+  messages: Message[];
+  startedAt: Date;
+  lastUpdatedAt: Date;
+  status: 'in-progress' | 'completed' | 'abandoned';
+  firstMessage: string;
+}
+
+interface SymptomCheckHistoryProps {
+  sessions: ChatSession[];
+  onViewTranscript: (sessionId: string) => void;
+  onResumeSession: (sessionId: string) => void;
+  onDeleteSession: (sessionId: string) => void;
+  onBack: () => void;
+  onNavigateHome?: () => void;
+  onNavigateAppointments?: () => void;
+  onNavigateProfile?: () => void;
+}
+
+export default function SymptomCheckHistory({ 
+  sessions, 
+  onViewTranscript,
+  onResumeSession,
+  onDeleteSession,
+  onBack,
+  onNavigateHome,
+  onNavigateAppointments,
+  onNavigateProfile
+}: SymptomCheckHistoryProps) {
+  // Sort sessions by most recent first
+  const sortedSessions = [...sessions].sort((a, b) => 
+    b.lastUpdatedAt.getTime() - a.lastUpdatedAt.getTime()
+  );
+
+  const getStatusBadge = (status: ChatSession['status']) => {
+    switch (status) {
+      case 'completed':
+        return (
+          <span className="px-2 py-1 bg-[#1F2937] text-white text-xs rounded-full">
+            Completed
+          </span>
+        );
+      case 'in-progress':
+        return (
+          <span className="px-2 py-1 bg-[#6B7280] text-white text-xs rounded-full">
+            In Progress
+          </span>
+        );
+      case 'abandoned':
+        return (
+          <span className="px-2 py-1 bg-[#9CA3AF] text-white text-xs rounded-full">
+            Abandoned
+          </span>
+        );
+    }
+  };
+
+  const formatDate = (date: Date) => {
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) {
+      return 'Today at ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } else if (diffDays === 1) {
+      return 'Yesterday at ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } else if (diffDays < 7) {
+      return date.toLocaleDateString('en-US', { weekday: 'short', hour: '2-digit', minute: '2-digit' });
+    } else {
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+  };
+
+  return (
+    <div className="flex flex-col h-full bg-white">
+      {/* Header */}
+      <div className="flex items-center justify-between p-4 border-b border-[#E5E7EB]">
+        <button onClick={onBack} className="p-2">
+          <ArrowLeft className="w-6 h-6 text-[#1F2937]" />
+        </button>
+        <h2 className="text-lg font-semibold text-[#1F2937]">Symptom Check History</h2>
+        <div className="w-10"></div>
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 overflow-y-auto pb-20">
+        {sortedSessions.length === 0 ? (
+          // Empty State
+          <div className="flex flex-col items-center justify-center h-full px-6 text-center">
+            <div className="w-20 h-20 bg-[#F3F4F6] rounded-full flex items-center justify-center mb-4">
+              <MessageSquare className="w-10 h-10 text-[#6B7280]" />
+            </div>
+            <h3 className="text-lg font-semibold text-[#1F2937] mb-2">No Symptom Checks Yet</h3>
+            <p className="text-sm text-[#6B7280] mb-6">
+              Start a symptom check and your conversations will appear here
+            </p>
+          </div>
+        ) : (
+          // Sessions List
+          <div className="px-6 py-6 space-y-4">
+            {sortedSessions.map((session) => (
+              <div 
+                key={session.sessionId}
+                className="bg-white border border-[#E5E7EB] rounded-xl p-4 hover:shadow-md transition-shadow"
+              >
+                {/* Session Header */}
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Clock className="w-4 h-4 text-[#6B7280]" />
+                      <p className="text-xs text-[#6B7280]">{formatDate(session.startedAt)}</p>
+                    </div>
+                    {getStatusBadge(session.status)}
+                  </div>
+                  <button
+                    onClick={() => onDeleteSession(session.sessionId)}
+                    className="p-2 hover:bg-[#F3F4F6] rounded-lg transition-colors"
+                  >
+                    <Trash2 className="w-5 h-5 text-[#6B7280]" />
+                  </button>
+                </div>
+
+                {/* First Message Preview */}
+                <p className="text-sm text-[#1F2937] mb-4 line-clamp-2">
+                  {session.firstMessage}
+                </p>
+
+                {/* Message Count */}
+                <p className="text-xs text-[#6B7280] mb-3">
+                  {session.messages.length} messages
+                </p>
+
+                {/* Actions */}
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => onViewTranscript(session.sessionId)}
+                    variant="outline"
+                    className="flex-1 h-[40px] border-[#E5E7EB] text-[#1F2937] rounded-lg text-sm font-medium hover:bg-[#F3F4F6]"
+                  >
+                    <Eye className="w-4 h-4 mr-2" />
+                    View
+                  </Button>
+                  
+                  {session.status === 'in-progress' && (
+                    <Button
+                      onClick={() => onResumeSession(session.sessionId)}
+                      className="flex-1 h-[40px] bg-[#1F2937] text-white rounded-lg text-sm font-medium hover:bg-[#374151]"
+                    >
+                      <MessageSquare className="w-4 h-4 mr-2" />
+                      Resume
+                    </Button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Bottom Navigation */}
+      <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-[#E5E7EB]">
+        <div className="flex items-center justify-around h-16">
+          <button 
+            onClick={onNavigateHome}
+            className="flex flex-col items-center gap-1 px-4 py-2"
+          >
+            <Home className="w-6 h-6 text-[#6B7280]" />
+            <span className="text-xs text-[#6B7280]">Home</span>
+          </button>
+          
+          <button 
+            onClick={onNavigateAppointments}
+            className="flex flex-col items-center gap-1 px-4 py-2"
+          >
+            <Calendar className="w-6 h-6 text-[#6B7280]" />
+            <span className="text-xs text-[#6B7280]">Appointments</span>
+          </button>
+          
+          <button className="flex flex-col items-center gap-1 px-4 py-2">
+            <History className="w-6 h-6 text-[#1F2937]" />
+            <span className="text-xs font-medium text-[#1F2937]">History</span>
+          </button>
+          
+          <button 
+            onClick={onNavigateProfile}
+            className="flex flex-col items-center gap-1 px-4 py-2"
+          >
+            <User className="w-6 h-6 text-[#6B7280]" />
+            <span className="text-xs text-[#6B7280]">Profile</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}

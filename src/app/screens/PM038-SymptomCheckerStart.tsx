@@ -1,0 +1,126 @@
+import { Button } from '../components/ui/button';
+import { ArrowLeft, MessageSquare, Shield, Clock } from 'lucide-react';
+
+interface SymptomCheckerStartProps {
+  onStart: () => void;
+  onBack: () => void;
+}
+
+export default function SymptomCheckerStart({ onStart, onBack }: SymptomCheckerStartProps) {
+  return (
+    <div className="flex flex-col h-full bg-white">
+      {/* Header */}
+      <div className="flex items-center p-4">
+        <button onClick={onBack} className="p-2">
+          <ArrowLeft className="w-6 h-6 text-[#1F2937]" />
+        </button>
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 px-8 overflow-y-auto pb-4">
+        {/* Icon */}
+        <div className="flex justify-center mb-6">
+          <div className="w-24 h-24 bg-[#1F2937]/5 rounded-full flex items-center justify-center">
+            <MessageSquare className="w-12 h-12 text-[#1F2937]" />
+          </div>
+        </div>
+
+        {/* Headline */}
+        <h1 className="text-[28px] font-bold text-[#1F2937] mb-3 text-center">
+          AI Symptom Checker
+        </h1>
+
+        {/* Subhead */}
+        <p className="text-base text-[#6B7280] mb-8 text-center">
+          Our AI will ask you questions about your symptoms to help determine the best next steps for your care.
+        </p>
+
+        {/* Features */}
+        <div className="space-y-4 mb-8">
+          <div className="flex items-start gap-4 p-4 bg-[#F3F4F6] rounded-xl">
+            <div className="w-10 h-10 bg-[#10B981]/10 rounded-full flex items-center justify-center flex-shrink-0">
+              <Clock className="w-5 h-5 text-[#10B981]" />
+            </div>
+            <div>
+              <p className="text-base font-semibold text-[#1F2937] mb-1">
+                Under 60 seconds
+              </p>
+              <p className="text-sm text-[#6B7280]">
+                Quick and easy conversation to understand your symptoms
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-4 p-4 bg-[#F3F4F6] rounded-xl">
+            <div className="w-10 h-10 bg-[#10B981]/10 rounded-full flex items-center justify-center flex-shrink-0">
+              <Shield className="w-5 h-5 text-[#10B981]" />
+            </div>
+            <div>
+              <p className="text-base font-semibold text-[#1F2937] mb-1">
+                Private & Secure
+              </p>
+              <p className="text-sm text-[#6B7280]">
+                Your information is protected and HIPAA compliant
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-4 p-4 bg-[#F3F4F6] rounded-xl">
+            <div className="w-10 h-10 bg-[#10B981]/10 rounded-full flex items-center justify-center flex-shrink-0">
+              <MessageSquare className="w-5 h-5 text-[#10B981]" />
+            </div>
+            <div>
+              <p className="text-base font-semibold text-[#1F2937] mb-1">
+                Find Providers Near You
+              </p>
+              <p className="text-sm text-[#6B7280]">
+                Connect with healthcare providers who can help with your symptoms
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Important Notice */}
+        <div className="border-2 border-[#EF4444] rounded-xl p-4 mb-8">
+          <div className="flex items-start gap-3">
+            <span className="text-xl">🚨</span>
+            <div>
+              <p className="text-base font-semibold text-[#EF4444] mb-2">
+                Emergency Warning
+              </p>
+              <p className="text-sm text-[#1F2937] mb-3">
+                If you are experiencing a medical emergency, including:
+              </p>
+              <ul className="text-sm text-[#1F2937] space-y-1 ml-4 mb-3">
+                <li>• Chest pain or difficulty breathing</li>
+                <li>• Severe bleeding or head injury</li>
+                <li>• Loss of consciousness</li>
+                <li>• Severe allergic reaction</li>
+              </ul>
+              <p className="text-sm font-semibold text-[#EF4444]">
+                Call 911 immediately or go to the nearest emergency room.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Disclaimer */}
+        <div className="bg-[#F3F4F6] rounded-xl p-4">
+          <p className="text-xs text-[#6B7280] text-center">
+            This symptom checker is for informational purposes only and does not replace professional medical advice, diagnosis, or treatment.
+          </p>
+        </div>
+      </div>
+
+      {/* Bottom Button */}
+      <div className="px-8 py-4 bg-white border-t border-[#E5E7EB]">
+        <Button 
+          onClick={onStart}
+          className="w-full h-[52px] bg-[#1F2937] text-white rounded-xl text-base font-medium hover:bg-[#374151]"
+        >
+          Start Symptom Check
+        </Button>
+      </div>
+    </div>
+  );
+}
