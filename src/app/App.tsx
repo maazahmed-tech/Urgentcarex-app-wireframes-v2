@@ -1,9 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // App Component - UrgentCareX Patient Mobile App
 import SplashScreen from './screens/PM001-SplashScreen';
-import WelcomeScreen1 from './screens/PM002-WelcomeScreen1';
-import WelcomeScreen2 from './screens/PM003-WelcomeScreen2';
-import WelcomeScreen3 from './screens/PM004-WelcomeScreen3';
+import WelcomeCarousel from './screens/PM002-WelcomeCarousel';
 import SignUpEmail from './screens/PM005-SignUpEmail';
 import SignUpPassword from './screens/PM006-SignUpPassword';
 import SignUpOTP from './screens/PM007-SignUpOTP';
@@ -40,10 +38,6 @@ import SymptomCheckerStart from './screens/PM038-SymptomCheckerStart';
 import SymptomCheckerChat from './screens/PM039-SymptomCheckerChat';
 import ROSIntro from './screens/PM040-ROSIntro';
 import ROSGeneral from './screens/PM041-ROSGeneral';
-import TriageSelfCare from './screens/PM042-TriageSelfCare';
-import TriageConsult from './screens/PM043-TriageConsult';
-import Triage24Hour from './screens/PM044-Triage24Hour';
-import TriageEmergency from './screens/PM045-TriageEmergency';
 import ProviderSearch from './screens/PM046-ProviderSearch';
 import ProviderProfile from './screens/PM047-ProviderProfile';
 import AppointmentTimeSelection from './screens/PM048-AppointmentTimeSelection';
@@ -56,10 +50,8 @@ import ROSRespiratory from './screens/PM054-ROSRespiratory';
 import ROSGastrointestinal from './screens/PM055-ROSGastrointestinal';
 import ROSMusculoskeletal from './screens/PM056-ROSMusculoskeletal';
 import AppointmentReason from './screens/PM057-AppointmentReason';
-import VirtualConsultIntro from './screens/PM058-VirtualConsultIntro';
 import ROSComplete from './screens/PM059-ROSComplete';
 import AppointmentReview from './screens/PM060-AppointmentReview';
-import VirtualConsultWaiting from './screens/PM061-VirtualConsultWaiting';
 import UpcomingAppointments from './screens/PM062-UpcomingAppointments';
 import AppointmentDetails from './screens/PM063-AppointmentDetails';
 import RescheduleAppointment from './screens/PM064-RescheduleAppointment';
@@ -72,9 +64,6 @@ import PastAppointments from './screens/PM070-PastAppointments';
 import PastAppointmentDetails from './screens/PM071-PastAppointmentDetails';
 import AppointmentHistory from './screens/PM072A-AppointmentHistory';
 import MedicalRecords from './screens/PM073-MedicalRecords';
-import TestResultsList from './screens/PM074-TestResultsList';
-import TestResultDetails from './screens/PM075-TestResultDetails';
-import PrescriptionsList from './screens/PM076-PrescriptionsList';
 import ProviderFeedback from './screens/PM077-ProviderFeedback';
 import FeedbackSuccess from './screens/PM078-FeedbackSuccess';
 import AppFeedback from './screens/PM079-AppFeedback';
@@ -85,7 +74,6 @@ import NotificationSettings from './screens/PM083-NotificationSettings';
 import SecurityPrivacy from './screens/PM084-SecurityPrivacy';
 import ChangePassword from './screens/PM085-ChangePassword';
 import InsuranceManagement from './screens/PM086-InsuranceManagement';
-import FamilyMembers from './screens/PM087-FamilyMembers';
 import { HelpSupport, FAQ, ContactSupport, GenericSettings, LegalPolicies, PolicyDetail } from './screens/PM088-101-RemainingSettings';
 import EmergencyAlert from './screens/PM102-EmergencyAlert';
 import { SuccessModal, ErrorModal, ConfirmationModal, LoadingModal, InfoModal, ToastNotification } from './screens/PM103-115-Modals';
@@ -95,9 +83,27 @@ import MedicalHistoryView from './screens/PM091-MedicalHistoryView';
 import type { ChatSession, Message } from './screens/PM072-SymptomCheckHistory';
 
 export default function App() {
-  const [currentScreen, setCurrentScreen] = useState('splash');
+  // Check URL hash for direct screen navigation (for screenshots/testing)
+  const getInitialScreen = () => {
+    const hash = window.location.hash.replace('#', '');
+    return hash || 'splash';
+  };
+
+  const [currentScreen, setCurrentScreen] = useState(getInitialScreen());
   const [previousScreen, setPreviousScreen] = useState<string>('');
   const [userData, setUserData] = useState<any>({});
+
+  // Listen for hash changes to navigate directly to screens
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash) {
+        setCurrentScreen(hash);
+      }
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
   
   // Chat Session Management with dummy data
   const [chatSessions, setChatSessions] = useState<ChatSession[]>([
@@ -365,33 +371,36 @@ export default function App() {
 
   return (
     <MobileContainer>
-      {currentScreen === 'splash' && <SplashScreen onComplete={() => navigate('welcome1')} />}
-      {currentScreen === 'welcome1' && (
-        <WelcomeScreen1 
-          onNext={() => navigate('welcome2')}
-          onSkip={() => navigate('signin')}
-        />
-      )}
-      {currentScreen === 'welcome2' && (
-        <WelcomeScreen2 
-          onNext={() => navigate('welcome3')}
-          onSkip={() => navigate('signin')}
-        />
-      )}
-      {currentScreen === 'welcome3' && (
-        <WelcomeScreen3 
-          onGetStarted={() => navigate('signup-email')}
+      {currentScreen === 'splash' && <SplashScreen onComplete={() => navigate('welcome')} />}
+      {currentScreen === 'welcome' && (
+        <WelcomeCarousel
+          onComplete={() => navigate('signup-email')}
           onSkip={() => navigate('signin')}
         />
       )}
       {currentScreen === 'signup-email' && (
-        <SignUpEmail 
+        <SignUpEmail
           onContinue={(email) => navigate('signup-password', { email })}
           onSignIn={() => navigate('signin')}
+          onBack={() => navigate('welcome')}
+          onViewTerms={() => navigate('signup-terms')}
+          onViewPrivacy={() => navigate('signup-privacy')}
+        />
+      )}
+      {currentScreen === 'signup-terms' && (
+        <PolicyDetail
+          policyType="terms"
+          onBack={() => navigate('signup-email')}
+        />
+      )}
+      {currentScreen === 'signup-privacy' && (
+        <PolicyDetail
+          policyType="privacy"
+          onBack={() => navigate('signup-email')}
         />
       )}
       {currentScreen === 'signup-password' && (
-        <SignUpPassword 
+        <SignUpPassword
           onContinue={(password) => navigate('signup-otp', { password })}
           onBack={() => navigate('signup-email')}
         />
@@ -435,10 +444,11 @@ export default function App() {
         />
       )}
       {currentScreen === 'signin' && (
-        <SignIn 
+        <SignIn
           onSignIn={() => navigate('home')}
           onForgotPassword={() => navigate('forgot-password-email')}
           onCreateAccount={() => navigate('signup-email')}
+          onBack={() => navigate('welcome')}
         />
       )}
       {currentScreen === 'forgot-password-email' && (
@@ -830,39 +840,6 @@ export default function App() {
         />
       )}
       
-      {currentScreen === 'triage-self-care' && (
-        <TriageSelfCare 
-          onGoHome={() => navigate('dashboard')}
-          onBookAppointment={() => navigate('provider-search')}
-          onCallNurse={() => navigate('dashboard')}
-          symptoms={userData.symptoms}
-        />
-      )}
-      
-      {currentScreen === 'triage-consult' && (
-        <TriageConsult 
-          onBookVirtualConsult={() => navigate('provider-search')}
-          onBookInPerson={() => navigate('provider-search')}
-          onCallNurse={() => navigate('dashboard')}
-          onGoHome={() => navigate('dashboard')}
-        />
-      )}
-      
-      {currentScreen === 'triage-24-hour' && (
-        <Triage24Hour 
-          onFindUrgentCare={() => navigate('provider-search')}
-          onCall24HourLine={() => navigate('dashboard')}
-          onViewERLocations={() => navigate('dashboard')}
-        />
-      )}
-      
-      {currentScreen === 'triage-emergency' && (
-        <TriageEmergency 
-          onCall911={() => navigate('dashboard')}
-          onFindER={() => navigate('dashboard')}
-        />
-      )}
-      
       {currentScreen === 'provider-search' && (
         <ProviderSearch 
           onSelectProvider={(provider) => navigate('provider-profile', { selectedProvider: provider })}
@@ -923,20 +900,6 @@ export default function App() {
           details={userData.appointmentDetails}
           onConfirm={() => navigate('appointment-confirmation')}
           onBack={() => navigate('appointment-reason')}
-        />
-      )}
-      
-      {currentScreen === 'virtual-consult-intro' && (
-        <VirtualConsultIntro 
-          onStartConsult={() => navigate('virtual-consult-waiting')}
-          onBack={() => navigate('triage-consult')}
-        />
-      )}
-      
-      {currentScreen === 'virtual-consult-waiting' && (
-        <VirtualConsultWaiting 
-          onJoinCall={() => navigate('dashboard')}
-          onCancel={() => navigate('dashboard')}
         />
       )}
       
@@ -1063,44 +1026,13 @@ export default function App() {
       
       {/* Phase 6: Medical Records and Feedback */}
       {currentScreen === 'medical-records' && (
-        <MedicalRecords 
+        <MedicalRecords
           onViewConditions={() => navigate('medical-records')}
-          onViewTestResults={() => navigate('test-results-list')}
-          onViewPrescriptions={() => navigate('prescriptions-list')}
           onViewAllergies={() => navigate('medical-records')}
           onBack={() => navigate('dashboard')}
         />
       )}
       
-      {currentScreen === 'test-results-list' && (
-        <TestResultsList 
-          onViewResult={(result) => navigate('test-result-details', { currentTestResult: result })}
-          onBack={() => navigate('medical-records')}
-        />
-      )}
-      
-      {currentScreen === 'test-result-details' && (
-        <TestResultDetails 
-          result={userData.currentTestResult || {
-            id: '1',
-            name: 'Complete Blood Count (CBC)',
-            date: '2026-01-08',
-            provider: 'Dr. Sarah Johnson',
-            status: 'normal',
-            category: 'Blood Work'
-          }}
-          onScheduleFollowUp={() => navigate('provider-search')}
-          onBack={() => navigate('test-results-list')}
-        />
-      )}
-      
-      {currentScreen === 'prescriptions-list' && (
-        <PrescriptionsList 
-          onViewPrescription={(rx) => navigate('prescriptions-list')}
-          onRequestRefill={(rx) => navigate('prescriptions-list')}
-          onBack={() => navigate('medical-records')}
-        />
-      )}
       
       {currentScreen === 'provider-feedback' && (
         <ProviderFeedback 
@@ -1185,13 +1117,6 @@ export default function App() {
         />
       )}
       
-      {currentScreen === 'family-members' && (
-        <FamilyMembers 
-          onAddMember={() => navigate('settings')}
-          onViewMember={(id) => navigate('settings')}
-          onBack={() => navigate('settings')}
-        />
-      )}
       
       {currentScreen === 'medical-history' && (
         <MedicalHistoryView 
@@ -1263,9 +1188,10 @@ export default function App() {
       )}
       
       {currentScreen === 'symptom-check-transcript' && (
-        <SymptomCheckTranscript 
+        <SymptomCheckTranscript
           session={getSessionById(userData.viewingSessionId) || chatSessions[0]}
           onBack={() => navigate('symptom-check-history')}
+          onFindCare={() => navigate('provider-search')}
         />
       )}
     </MobileContainer>

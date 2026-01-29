@@ -1,6 +1,7 @@
 import { Button } from '../components/ui/button';
-import { Home, Calendar, History, User, MessageSquare, Stethoscope, Clock, MapPin, Bell, Navigation, X } from 'lucide-react';
+import { Calendar, MessageSquare, MapPin, Bell, X } from 'lucide-react';
 import { useState } from 'react';
+import BottomNavigation from '../components/BottomNavigation';
 
 interface DashboardProps {
   onStartSymptomCheck: () => void;
@@ -128,7 +129,7 @@ export default function Dashboard({
             className="w-full h-[56px] bg-[#1F2937] text-white rounded-xl text-base font-medium hover:bg-[#374151]"
           >
             <MessageSquare className="w-5 h-5 mr-2" />
-            Start Symptom Check
+            Find Care Now
           </Button>
         </div>
 
@@ -147,15 +148,9 @@ export default function Dashboard({
                 <p className="text-sm text-[#6B7280] mb-2">
                   Primary Care Physician
                 </p>
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-1 text-sm text-[#6B7280]">
-                    <Calendar className="w-4 h-4" />
-                    <span>Jan 15, 2026</span>
-                  </div>
-                  <div className="flex items-center gap-1 text-sm text-[#6B7280]">
-                    <Clock className="w-4 h-4" />
-                    <span>10:00 AM</span>
-                  </div>
+                <div className="flex items-center gap-1 text-sm text-[#6B7280]">
+                  <Calendar className="w-4 h-4" />
+                  <span>Jan 15, 2026 • 10:00 AM</span>
                 </div>
               </div>
               <div className="px-3 py-1 bg-[#F3F4F6] rounded-full">
@@ -249,37 +244,14 @@ export default function Dashboard({
       </div>
 
       {/* Bottom Navigation */}
-      <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-[#E5E7EB]">
-        <div className="flex items-center justify-around h-16">
-          <button className="flex flex-col items-center gap-1 px-4 py-2">
-            <Home className="w-6 h-6 text-[#1F2937]" />
-            <span className="text-xs font-medium text-[#1F2937]">Home</span>
-          </button>
-          
-          <button 
-            onClick={onViewAppointments}
-            className="flex flex-col items-center gap-1 px-4 py-2"
-          >
-            <Calendar className="w-6 h-6 text-[#6B7280]" />
-            <span className="text-xs text-[#6B7280]">Appointments</span>
-          </button>
-          
-          <button 
-            onClick={onViewHistory}
-            className="flex flex-col items-center gap-1 px-4 py-2"
-          >
-            <History className="w-6 h-6 text-[#6B7280]" />
-            <span className="text-xs text-[#6B7280]">History</span>
-          </button>
-          
-          <button 
-            onClick={onViewProfile}
-            className="flex flex-col items-center gap-1 px-4 py-2"
-          >
-            <User className="w-6 h-6 text-[#6B7280]" />
-            <span className="text-xs text-[#6B7280]">Profile</span>
-          </button>
-        </div>
+      <div className="absolute bottom-0 left-0 right-0">
+        <BottomNavigation
+          activeTab="home"
+          onNavigateHome={() => {}}
+          onNavigateAppointments={onViewAppointments}
+          onNavigateHistory={onViewHistory}
+          onNavigateProfile={onViewProfile}
+        />
       </div>
     </div>
   );

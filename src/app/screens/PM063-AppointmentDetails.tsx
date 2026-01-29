@@ -1,5 +1,6 @@
 import { Button } from '../components/ui/button';
 import { ArrowLeft, Calendar, Clock, CheckCircle, MessageSquare, FileText, ClipboardList } from 'lucide-react';
+import { QUESTIONNAIRE_NAME } from '../constants/questionnaire';
 
 interface Appointment {
   id: string;
@@ -122,7 +123,7 @@ export default function AppointmentDetails({
         {/* ROS Summary */}
         {appointment.rosCompleted && (
           <div className="px-6 py-6 border-b border-[#E5E7EB]">
-            <h3 className="text-lg font-semibold text-[#1F2937] mb-4">ROS Summary</h3>
+            <h3 className="text-lg font-semibold text-[#1F2937] mb-4">{QUESTIONNAIRE_NAME} Summary</h3>
             <div className="space-y-2">
               {rosSummary.map((item, index) => (
                 <div key={index} className="flex items-start gap-3">
@@ -146,7 +147,7 @@ export default function AppointmentDetails({
               className="w-full h-[52px] bg-[#1F2937] text-white rounded-xl text-base font-medium hover:bg-[#374151] flex items-center justify-center gap-2"
             >
               <ClipboardList className="w-5 h-5" />
-              Complete ROS
+              Complete {QUESTIONNAIRE_NAME}
             </Button>
           )}
 

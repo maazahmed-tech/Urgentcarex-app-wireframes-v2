@@ -1,13 +1,14 @@
 import { Button } from '../components/ui/button';
-import { ArrowLeft, Download } from 'lucide-react';
+import { ArrowLeft, MapPin } from 'lucide-react';
 import { Message, ChatSession } from './PM072-SymptomCheckHistory';
 
 interface SymptomCheckTranscriptProps {
   session: ChatSession;
   onBack: () => void;
+  onFindCare?: () => void;
 }
 
-export default function SymptomCheckTranscript({ session, onBack }: SymptomCheckTranscriptProps) {
+export default function SymptomCheckTranscript({ session, onBack, onFindCare }: SymptomCheckTranscriptProps) {
   const getStatusBadge = (status: ChatSession['status']) => {
     switch (status) {
       case 'completed':
@@ -34,12 +35,10 @@ export default function SymptomCheckTranscript({ session, onBack }: SymptomCheck
   return (
     <div className="flex flex-col h-full bg-white">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-[#E5E7EB]">
+      <div className="flex items-center p-4 border-b border-[#E5E7EB]">
         <button onClick={onBack} className="p-2">
           <ArrowLeft className="w-6 h-6 text-[#1F2937]" />
         </button>
-        <h2 className="text-lg font-semibold text-[#1F2937]">Chat Transcript</h2>
-        <div className="w-10"></div>
       </div>
 
       {/* Session Info */}
@@ -118,6 +117,19 @@ export default function SymptomCheckTranscript({ session, onBack }: SymptomCheck
           This is a read-only transcript of your symptom check conversation
         </p>
       </div>
+
+      {/* Find Care Button - Only for completed sessions */}
+      {session.status === 'completed' && onFindCare && (
+        <div className="bg-white border-t border-[#E5E7EB] p-4">
+          <Button
+            onClick={onFindCare}
+            className="w-full h-[52px] bg-[#1F2937] text-white rounded-xl text-base font-medium hover:bg-[#374151] flex items-center justify-center gap-2"
+          >
+            <MapPin className="w-5 h-5" />
+            Find Care
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

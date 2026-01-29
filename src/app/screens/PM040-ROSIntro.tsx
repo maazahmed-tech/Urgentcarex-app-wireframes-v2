@@ -1,5 +1,6 @@
 import { Button } from '../components/ui/button';
 import { ArrowLeft, ClipboardList, Shield } from 'lucide-react';
+import { QUESTIONNAIRE_NAME } from '../constants/questionnaire';
 
 interface ROSIntroProps {
   onStart: () => void;
@@ -28,16 +29,23 @@ export default function ROSIntro({ onStart, onSkip, onBack }: ROSIntroProps) {
 
         {/* Headline */}
         <h1 className="text-[28px] font-bold text-[#1F2937] mb-3 text-center">
-          Review of Systems
+          {QUESTIONNAIRE_NAME}
         </h1>
+
+        {/* Disclaimer Card */}
+        <div className="bg-[#F3F4F6] rounded-xl p-5 mb-4">
+          <p className="text-sm text-[#6B7280]">
+            To help you save time at the doctor's office, please complete this questionnaire.
+          </p>
+        </div>
 
         {/* Info Card */}
         <div className="bg-[#F3F4F6] rounded-xl p-5 mb-6">
           <h3 className="text-base font-semibold text-[#1F2937] mb-3">
-            What is Review of Systems?
+            What is the {QUESTIONNAIRE_NAME}?
           </h3>
           <p className="text-sm text-[#6B7280]">
-            Review of Systems (ROS) is a comprehensive set of questions healthcare providers use to understand your overall health. It helps identify symptoms you might not have mentioned initially.
+            The {QUESTIONNAIRE_NAME} is a comprehensive set of questions healthcare providers use to understand your overall health. It helps identify symptoms you might not have mentioned initially.
           </p>
         </div>
 

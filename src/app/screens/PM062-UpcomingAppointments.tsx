@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button } from '../components/ui/button';
-import { ArrowLeft, Calendar, Clock, CheckCircle, MessageSquare, Home, History, User, ClipboardList } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, CheckCircle, MessageSquare, ClipboardList } from 'lucide-react';
+import BottomNavigation from '../components/BottomNavigation';
 
 interface Appointment {
   id: string;
@@ -267,34 +268,14 @@ export default function UpcomingAppointments({ onViewDetails, onBack, initialFil
       </div>
 
       {/* Bottom Navigation */}
-      <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-[#E5E7EB]">
-        <div className="flex items-center justify-around h-16">
-          <button onClick={onBack} className="flex flex-col items-center gap-1 px-4 py-2">
-            <Home className="w-6 h-6 text-[#6B7280]" />
-            <span className="text-xs text-[#6B7280]">Home</span>
-          </button>
-          
-          <button className="flex flex-col items-center gap-1 px-4 py-2">
-            <Calendar className="w-6 h-6 text-[#1F2937]" />
-            <span className="text-xs font-medium text-[#1F2937]">Appointments</span>
-          </button>
-          
-          <button 
-            onClick={onViewHistory}
-            className="flex flex-col items-center gap-1 px-4 py-2"
-          >
-            <History className="w-6 h-6 text-[#6B7280]" />
-            <span className="text-xs text-[#6B7280]">History</span>
-          </button>
-          
-          <button 
-            onClick={onViewProfile}
-            className="flex flex-col items-center gap-1 px-4 py-2"
-          >
-            <User className="w-6 h-6 text-[#6B7280]" />
-            <span className="text-xs text-[#6B7280]">Profile</span>
-          </button>
-        </div>
+      <div className="absolute bottom-0 left-0 right-0">
+        <BottomNavigation
+          activeTab="appointments"
+          onNavigateHome={onBack}
+          onNavigateAppointments={() => {}}
+          onNavigateHistory={onViewHistory || (() => {})}
+          onNavigateProfile={onViewProfile || (() => {})}
+        />
       </div>
     </div>
   );

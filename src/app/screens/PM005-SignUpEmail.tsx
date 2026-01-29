@@ -7,9 +7,12 @@ import { ArrowLeft } from 'lucide-react';
 interface SignUpEmailProps {
   onContinue: (email: string) => void;
   onSignIn: () => void;
+  onBack: () => void;
+  onViewTerms: () => void;
+  onViewPrivacy: () => void;
 }
 
-export default function SignUpEmail({ onContinue, onSignIn }: SignUpEmailProps) {
+export default function SignUpEmail({ onContinue, onSignIn, onBack, onViewTerms, onViewPrivacy }: SignUpEmailProps) {
   const [emailOrPhone, setEmailOrPhone] = useState('demo.patient@urgentcarex.com');
 
   const isValid = emailOrPhone.length > 0 && 
@@ -19,7 +22,7 @@ export default function SignUpEmail({ onContinue, onSignIn }: SignUpEmailProps) 
     <div className="flex flex-col h-full bg-white">
       {/* Header with Back Button */}
       <div className="flex items-center p-4">
-        <button onClick={() => window.history.back()} className="p-2">
+        <button onClick={onBack} className="p-2">
           <ArrowLeft className="w-6 h-6 text-[#1F2937]" />
         </button>
       </div>
@@ -79,7 +82,20 @@ export default function SignUpEmail({ onContinue, onSignIn }: SignUpEmailProps) 
 
         {/* Legal Text */}
         <p className="text-sm text-[#6B7280] text-center">
-          By continuing, you agree to our Terms and Privacy Policy.
+          By continuing, you agree to our{' '}
+          <button
+            onClick={onViewTerms}
+            className="text-sm text-[#1F2937] underline"
+          >
+            Terms of Service
+          </button>
+          {' '}and{' '}
+          <button
+            onClick={onViewPrivacy}
+            className="text-sm text-[#1F2937] underline"
+          >
+            Privacy Policy
+          </button>.
         </p>
       </div>
     </div>

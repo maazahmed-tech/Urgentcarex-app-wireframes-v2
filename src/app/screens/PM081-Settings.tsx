@@ -1,6 +1,7 @@
 import { Button } from '../components/ui/button';
-import { ArrowLeft, User, Bell, Lock, CreditCard, Users, Shield, HelpCircle, FileText, LogOut, ChevronRight, Home, Calendar, History, MapPin } from 'lucide-react';
+import { ArrowLeft, User, Bell, Lock, CreditCard, Shield, HelpCircle, FileText, LogOut, ChevronRight, MapPin, Globe, Check } from 'lucide-react';
 import { useState } from 'react';
+import BottomNavigation from '../components/BottomNavigation';
 
 interface SettingsProps {
   onNavigate: (section: string) => void;
@@ -13,6 +14,34 @@ interface SettingsProps {
 
 export default function Settings({ onNavigate, onLogout, onBack, onNavigateHome, onNavigateAppointments, onNavigateHistory }: SettingsProps) {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [showLanguageModal, setShowLanguageModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [currentLanguage, setCurrentLanguage] = useState('English');
+  const [selectedLanguage, setSelectedLanguage] = useState('English');
+
+  const languages = [
+    { code: 'en', name: 'English', nativeName: 'English' },
+    { code: 'es', name: 'Spanish', nativeName: 'Español' }
+  ];
+
+  const handleLanguageSelect = (language: string) => {
+    setSelectedLanguage(language);
+  };
+
+  const handleConfirmLanguage = () => {
+    setShowLanguageModal(false);
+    setShowConfirmModal(true);
+  };
+
+  const handleFinalConfirm = () => {
+    setCurrentLanguage(selectedLanguage);
+    setShowConfirmModal(false);
+  };
+
+  const handleCancelLanguage = () => {
+    setSelectedLanguage(currentLanguage);
+    setShowLanguageModal(false);
+  };
 
   return (
     <div className="flex flex-col h-full bg-white">
@@ -125,6 +154,20 @@ export default function Settings({ onNavigate, onLogout, onBack, onNavigateHome,
               </div>
               <ChevronRight className="w-5 h-5 text-[#6B7280]" />
             </button>
+
+            <button
+              onClick={() => setShowLanguageModal(true)}
+              className="w-full flex items-center justify-between p-4 bg-white border border-[#E5E7EB] rounded-xl hover:border-[#1F2937] transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <Globe className="w-5 h-5 text-[#6B7280]" />
+                <span className="text-base text-[#1F2937]">Language</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-[#6B7280]">{currentLanguage}</span>
+                <ChevronRight className="w-5 h-5 text-[#6B7280]" />
+              </div>
+            </button>
           </div>
         </div>
 
@@ -178,24 +221,102 @@ export default function Settings({ onNavigate, onLogout, onBack, onNavigateHome,
       </div>
 
       {/* Bottom Navigation */}
-      <div className="bg-white border-t border-[#E5E7EB] px-6 py-3 flex justify-around items-center">
-        <button onClick={onNavigateHome} className="flex flex-col items-center gap-1 py-2">
-          <Home className="w-6 h-6 text-[#6B7280]" />
-          <span className="text-xs text-[#6B7280]">Home</span>
-        </button>
-        <button onClick={onNavigateAppointments} className="flex flex-col items-center gap-1 py-2">
-          <Calendar className="w-6 h-6 text-[#6B7280]" />
-          <span className="text-xs text-[#6B7280]">Appointments</span>
-        </button>
-        <button onClick={onNavigateHistory} className="flex flex-col items-center gap-1 py-2">
-          <History className="w-6 h-6 text-[#6B7280]" />
-          <span className="text-xs text-[#6B7280]">History</span>
-        </button>
-        <button className="flex flex-col items-center gap-1 py-2">
-          <User className="w-6 h-6 text-[#1F2937]" />
-          <span className="text-xs text-[#1F2937] font-medium">Profile</span>
-        </button>
-      </div>
+      <BottomNavigation
+        activeTab="profile"
+        onNavigateHome={onNavigateHome || (() => {})}
+        onNavigateAppointments={onNavigateAppointments || (() => {})}
+        onNavigateHistory={onNavigateHistory || (() => {})}
+        onNavigateProfile={() => {}}
+      />
+
+      {/* Language Selection Modal */}
+      {showLanguageModal && (
+        <div className="absolute inset-0 bg-black/50 flex items-end z-50">
+          <div className="bg-white w-full rounded-t-3xl p-6 animate-slide-up">
+            <h2 className="text-xl font-semibold text-[#1F2937] mb-2">Select Language</h2>
+            <p className="text-sm text-[#6B7280] mb-6">Choose your preferred language for the app</p>
+
+            <div className="space-y-3 mb-6">
+              {languages.map((lang) => (
+                <button
+                  key={lang.code}
+                  onClick={() => handleLanguageSelect(lang.name)}
+                  className={`w-full flex items-center justify-between p-4 rounded-xl border-2 transition-all ${
+                    selectedLanguage === lang.name
+                      ? 'border-[#1F2937] bg-[#1F2937]/5'
+                      : 'border-[#E5E7EB] hover:border-[#1F2937]/30'
+                  }`}
+                >
+                  <div className="flex flex-col items-start">
+                    <span className="text-base font-medium text-[#1F2937]">{lang.name}</span>
+                    <span className="text-sm text-[#6B7280]">{lang.nativeName}</span>
+                  </div>
+                  {selectedLanguage === lang.name && (
+                    <div className="w-6 h-6 bg-[#1F2937] rounded-full flex items-center justify-center">
+                      <Check className="w-4 h-4 text-white" />
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex gap-3">
+              <Button
+                onClick={handleCancelLanguage}
+                variant="outline"
+                className="flex-1 h-[52px] border-[#E5E7EB] text-[#1F2937] rounded-xl text-base font-medium"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleConfirmLanguage}
+                className="flex-1 h-[52px] bg-[#1F2937] text-white rounded-xl text-base font-medium hover:bg-[#374151]"
+              >
+                Continue
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Confirm Language Change Modal */}
+      {showConfirmModal && (
+        <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-50 px-6">
+          <div className="bg-white w-full max-w-sm rounded-2xl p-6 animate-scale-up">
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 bg-[#1F2937]/10 rounded-full flex items-center justify-center">
+                <Globe className="w-8 h-8 text-[#1F2937]" />
+              </div>
+            </div>
+
+            <h2 className="text-xl font-semibold text-[#1F2937] mb-2 text-center">
+              Change Language?
+            </h2>
+            <p className="text-sm text-[#6B7280] mb-6 text-center">
+              Are you sure you want to change the app language to <span className="font-semibold text-[#1F2937]">{selectedLanguage}</span>?
+            </p>
+
+            <div className="flex gap-3">
+              <Button
+                onClick={() => {
+                  setShowConfirmModal(false);
+                  setSelectedLanguage(currentLanguage);
+                }}
+                variant="outline"
+                className="flex-1 h-[52px] border-[#E5E7EB] text-[#1F2937] rounded-xl text-base font-medium"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleFinalConfirm}
+                className="flex-1 h-[52px] bg-[#1F2937] text-white rounded-xl text-base font-medium hover:bg-[#374151]"
+              >
+                Confirm
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

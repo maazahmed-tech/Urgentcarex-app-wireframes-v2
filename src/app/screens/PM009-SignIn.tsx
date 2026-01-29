@@ -8,9 +8,10 @@ interface SignInProps {
   onSignIn: () => void;
   onForgotPassword: () => void;
   onCreateAccount: () => void;
+  onBack: () => void;
 }
 
-export default function SignIn({ onSignIn, onForgotPassword, onCreateAccount }: SignInProps) {
+export default function SignIn({ onSignIn, onForgotPassword, onCreateAccount, onBack }: SignInProps) {
   const [emailOrPhone, setEmailOrPhone] = useState('demo.patient@urgentcarex.com');
   const [password, setPassword] = useState('Patient@2026!');
   const [showPassword, setShowPassword] = useState(false);
@@ -21,7 +22,7 @@ export default function SignIn({ onSignIn, onForgotPassword, onCreateAccount }: 
     <div className="flex flex-col h-full bg-white">
       {/* Header with Back Button */}
       <div className="flex items-center p-4">
-        <button onClick={() => window.history.back()} className="p-2">
+        <button onClick={onBack} className="p-2">
           <ArrowLeft className="w-6 h-6 text-[#1F2937]" />
         </button>
       </div>

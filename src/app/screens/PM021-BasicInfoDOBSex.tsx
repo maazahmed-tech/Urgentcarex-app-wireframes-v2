@@ -3,22 +3,24 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { ArrowLeft, Calendar } from 'lucide-react';
+import PronounsSelector from '../components/PronounsSelector';
 
 interface BasicInfoDOBSexProps {
-  onContinue: (data: { dob: string; sex: string }) => void;
+  onContinue: (data: { dob: string; sex: string; pronouns: string }) => void;
   onBack: () => void;
-  initialData?: { dob?: string; sex?: string };
+  initialData?: { dob?: string; sex?: string; pronouns?: string };
 }
 
 export default function BasicInfoDOBSex({ onContinue, onBack, initialData }: BasicInfoDOBSexProps) {
-  const [dateOfBirth, setDateOfBirth] = useState(initialData?.dateOfBirth || '1985-06-15');
-  const [sex, setSex] = useState(initialData?.sex || 'Male');
+  const [dateOfBirth, setDateOfBirth] = useState(initialData?.dob || '1985-06-15');
+  const [sex, setSex] = useState(initialData?.sex || 'male');
+  const [pronouns, setPronouns] = useState(initialData?.pronouns || '');
 
   const isValid = dateOfBirth !== '' && sex !== '';
 
   const handleContinue = () => {
     if (isValid) {
-      onContinue({ dob: dateOfBirth, sex });
+      onContinue({ dob: dateOfBirth, sex, pronouns });
     }
   };
 
@@ -129,6 +131,12 @@ export default function BasicInfoDOBSex({ onContinue, onBack, initialData }: Bas
               Prefer not to say
             </button>
           </div>
+
+          {/* Pronouns */}
+          <PronounsSelector
+            value={pronouns}
+            onChange={setPronouns}
+          />
         </div>
       </div>
 

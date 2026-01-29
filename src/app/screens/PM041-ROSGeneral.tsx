@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Button } from '../components/ui/button';
 import { Checkbox } from '../components/ui/checkbox';
 import { ArrowLeft } from 'lucide-react';
+import { QUESTIONNAIRE_NAME } from '../constants/questionnaire';
 
 interface ROSGeneralProps {
   onContinue: (responses: Record<string, boolean>) => void;
@@ -53,7 +54,7 @@ export default function ROSGeneral({ onContinue, onBack, initialData }: ROSGener
         {/* Progress */}
         <div className="mb-6">
           <p className="text-sm font-medium text-[#6B7280] mb-2">
-            Review of Systems: Step 1 of 8
+            {QUESTIONNAIRE_NAME}: Step 1 of 8
           </p>
           <div className="w-full h-1 bg-[#E5E7EB] rounded-full overflow-hidden">
             <div className="h-full bg-[#1F2937] rounded-full" style={{ width: '12.5%' }}></div>

@@ -1,5 +1,6 @@
 import { Button } from '../components/ui/button';
 import { CheckCircle, Home, FileText, ArrowLeft } from 'lucide-react';
+import { QUESTIONNAIRE_NAME } from '../constants/questionnaire';
 
 interface ROSCompleteProps {
   onViewResults: () => void;
@@ -39,10 +40,10 @@ export default function ROSComplete({ onViewResults, onGoHome, onBack }: ROSComp
             <CheckCircle className="w-12 h-12 text-[#1F2937]" />
           </div>
           <h1 className="text-2xl font-bold text-white mb-2">
-            Review Complete!
+            Questionnaire Complete!
           </h1>
           <p className="text-base text-white/90">
-            Thank you for completing the review of systems
+            Thank you for completing the {QUESTIONNAIRE_NAME}
           </p>
         </div>
       </div>
@@ -53,7 +54,7 @@ export default function ROSComplete({ onViewResults, onGoHome, onBack }: ROSComp
           {/* Summary Card */}
           <div className="bg-[#F3F4F6] rounded-2xl p-6 mb-6">
             <h2 className="text-lg font-semibold text-[#1F2937] mb-4">
-              Review of Systems Summary
+              {QUESTIONNAIRE_NAME} Summary
             </h2>
             <div className="space-y-3 mb-4">
               {rosSummary.map((item, index) => (

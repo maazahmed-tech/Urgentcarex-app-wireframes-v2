@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Button } from '../components/ui/button';
 import { Checkbox } from '../components/ui/checkbox';
 import { ArrowLeft } from 'lucide-react';
+import { QUESTIONNAIRE_NAME } from '../constants/questionnaire';
 
 interface ROSCardiovascularProps {
   onContinue: (responses: Record<string, boolean>) => void;
@@ -54,7 +55,7 @@ export default function ROSCardiovascular({ onContinue, onBack, initialData }: R
         {/* Progress */}
         <div className="mb-6">
           <p className="text-sm font-medium text-[#6B7280] mb-2">
-            Review of Systems: Step 5 of 8
+            {QUESTIONNAIRE_NAME}: Step 5 of 8
           </p>
           <div className="w-full h-1 bg-[#E5E7EB] rounded-full overflow-hidden">
             <div className="h-full bg-[#1F2937] rounded-full" style={{ width: '62.5%' }}></div>

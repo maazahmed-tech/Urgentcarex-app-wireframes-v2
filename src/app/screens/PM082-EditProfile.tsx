@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button } from '../components/ui/button';
-import { ArrowLeft, Camera, Upload } from 'lucide-react';
+import { ArrowLeft, Camera } from 'lucide-react';
+import PronounsSelector from '../components/PronounsSelector';
 
 interface EditProfileProps {
   onSave: (profileData: any) => void;
@@ -13,9 +14,10 @@ export default function EditProfile({ onSave, onBack }: EditProfileProps) {
   const [email, setEmail] = useState('demo.patient@urgentcarex.com');
   const [phone, setPhone] = useState('(555) 123-4567');
   const [dateOfBirth, setDateOfBirth] = useState('1985-06-15');
+  const [pronouns, setPronouns] = useState('he/him');
 
   const handleSave = () => {
-    onSave({ firstName, lastName, email, phone, dateOfBirth });
+    onSave({ firstName, lastName, email, phone, dateOfBirth, pronouns });
   };
 
   return (
@@ -107,9 +109,13 @@ export default function EditProfile({ onSave, onBack }: EditProfileProps) {
               className="w-full h-[52px] px-4 border border-[#E5E7EB] rounded-xl text-base focus:outline-none focus:border-[#1F2937]"
             />
           </div>
-        </div>
 
-        {/* Info Notice - REMOVED */}
+          {/* Pronouns */}
+          <PronounsSelector
+            value={pronouns}
+            onChange={setPronouns}
+          />
+        </div>
 
         {/* Save Button */}
         <div className="mt-6">

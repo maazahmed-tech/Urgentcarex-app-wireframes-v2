@@ -1,5 +1,5 @@
 import { Button } from '../components/ui/button';
-import { ArrowLeft, MessageSquare, Shield, Clock } from 'lucide-react';
+import { ArrowLeft, MessageSquare, Shield, Clock, Stethoscope } from 'lucide-react';
 
 interface SymptomCheckerStartProps {
   onStart: () => void;
@@ -21,18 +21,13 @@ export default function SymptomCheckerStart({ onStart, onBack }: SymptomCheckerS
         {/* Icon */}
         <div className="flex justify-center mb-6">
           <div className="w-24 h-24 bg-[#1F2937]/5 rounded-full flex items-center justify-center">
-            <MessageSquare className="w-12 h-12 text-[#1F2937]" />
+            <Stethoscope className="w-12 h-12 text-[#1F2937]" />
           </div>
         </div>
 
-        {/* Headline */}
-        <h1 className="text-[28px] font-bold text-[#1F2937] mb-3 text-center">
-          AI Symptom Checker
-        </h1>
-
         {/* Subhead */}
         <p className="text-base text-[#6B7280] mb-8 text-center">
-          Our AI will ask you questions about your symptoms to help determine the best next steps for your care.
+          Our AI will ask you questions about your symptoms to help determine the best Healthcare Facility and Individual Doctors.
         </p>
 
         {/* Features */}
@@ -104,13 +99,7 @@ export default function SymptomCheckerStart({ onStart, onBack }: SymptomCheckerS
           </div>
         </div>
 
-        {/* Disclaimer */}
-        <div className="bg-[#F3F4F6] rounded-xl p-4">
-          <p className="text-xs text-[#6B7280] text-center">
-            This symptom checker is for informational purposes only and does not replace professional medical advice, diagnosis, or treatment.
-          </p>
         </div>
-      </div>
 
       {/* Bottom Button */}
       <div className="px-8 py-4 bg-white border-t border-[#E5E7EB]">
@@ -118,7 +107,7 @@ export default function SymptomCheckerStart({ onStart, onBack }: SymptomCheckerS
           onClick={onStart}
           className="w-full h-[52px] bg-[#1F2937] text-white rounded-xl text-base font-medium hover:bg-[#374151]"
         >
-          Start Symptom Check
+          Find Care Now
         </Button>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { Button } from '../components/ui/button';
-import { ArrowLeft, MessageSquare, Trash2, Eye, Clock, Home, Calendar, History, User } from 'lucide-react';
+import { ArrowLeft, MessageSquare, Trash2, Eye, Clock } from 'lucide-react';
+import BottomNavigation from '../components/BottomNavigation';
 
 export interface Message {
   id: string;
@@ -86,12 +87,10 @@ export default function SymptomCheckHistory({
   return (
     <div className="flex flex-col h-full bg-white">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-[#E5E7EB]">
+      <div className="flex items-center p-4 border-b border-[#E5E7EB]">
         <button onClick={onBack} className="p-2">
           <ArrowLeft className="w-6 h-6 text-[#1F2937]" />
         </button>
-        <h2 className="text-lg font-semibold text-[#1F2937]">Symptom Check History</h2>
-        <div className="w-10"></div>
       </div>
 
       {/* Content */}
@@ -137,11 +136,6 @@ export default function SymptomCheckHistory({
                   {session.firstMessage}
                 </p>
 
-                {/* Message Count */}
-                <p className="text-xs text-[#6B7280] mb-3">
-                  {session.messages.length} messages
-                </p>
-
                 {/* Actions */}
                 <div className="flex gap-2">
                   <Button
@@ -170,37 +164,14 @@ export default function SymptomCheckHistory({
       </div>
 
       {/* Bottom Navigation */}
-      <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-[#E5E7EB]">
-        <div className="flex items-center justify-around h-16">
-          <button 
-            onClick={onNavigateHome}
-            className="flex flex-col items-center gap-1 px-4 py-2"
-          >
-            <Home className="w-6 h-6 text-[#6B7280]" />
-            <span className="text-xs text-[#6B7280]">Home</span>
-          </button>
-          
-          <button 
-            onClick={onNavigateAppointments}
-            className="flex flex-col items-center gap-1 px-4 py-2"
-          >
-            <Calendar className="w-6 h-6 text-[#6B7280]" />
-            <span className="text-xs text-[#6B7280]">Appointments</span>
-          </button>
-          
-          <button className="flex flex-col items-center gap-1 px-4 py-2">
-            <History className="w-6 h-6 text-[#1F2937]" />
-            <span className="text-xs font-medium text-[#1F2937]">History</span>
-          </button>
-          
-          <button 
-            onClick={onNavigateProfile}
-            className="flex flex-col items-center gap-1 px-4 py-2"
-          >
-            <User className="w-6 h-6 text-[#6B7280]" />
-            <span className="text-xs text-[#6B7280]">Profile</span>
-          </button>
-        </div>
+      <div className="absolute bottom-0 left-0 right-0">
+        <BottomNavigation
+          activeTab="history"
+          onNavigateHome={onNavigateHome || (() => {})}
+          onNavigateAppointments={onNavigateAppointments || (() => {})}
+          onNavigateHistory={() => {}}
+          onNavigateProfile={onNavigateProfile || (() => {})}
+        />
       </div>
     </div>
   );

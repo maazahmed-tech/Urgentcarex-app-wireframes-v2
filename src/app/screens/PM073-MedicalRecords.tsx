@@ -4,18 +4,14 @@ import { ArrowLeft, FileText, Activity, Pill, ClipboardList, Search, Filter } fr
 
 interface MedicalRecordsProps {
   onViewConditions: () => void;
-  onViewTestResults: () => void;
-  onViewPrescriptions: () => void;
   onViewAllergies: () => void;
   onBack: () => void;
 }
 
-export default function MedicalRecords({ 
+export default function MedicalRecords({
   onViewConditions,
-  onViewTestResults, 
-  onViewPrescriptions,
   onViewAllergies,
-  onBack 
+  onBack
 }: MedicalRecordsProps) {
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -52,32 +48,6 @@ export default function MedicalRecords({
         <div className="mb-6">
           <h3 className="text-lg font-semibold text-[#1F2937] mb-4">Quick Access</h3>
           <div className="grid grid-cols-2 gap-3">
-            <button
-              onClick={onViewTestResults}
-              className="p-5 bg-white border border-[#E5E7EB] rounded-2xl hover:border-[#1F2937] transition-colors"
-            >
-              <div className="flex flex-col items-center text-center">
-                <div className="w-12 h-12 bg-[#10B981]/10 rounded-full flex items-center justify-center mb-3">
-                  <Activity className="w-6 h-6 text-[#10B981]" />
-                </div>
-                <p className="text-sm font-medium text-[#1F2937] mb-1">Test Results</p>
-                <p className="text-xs text-[#6B7280]">3 recent</p>
-              </div>
-            </button>
-
-            <button
-              onClick={onViewPrescriptions}
-              className="p-5 bg-white border border-[#E5E7EB] rounded-2xl hover:border-[#1F2937] transition-colors"
-            >
-              <div className="flex flex-col items-center text-center">
-                <div className="w-12 h-12 bg-[#1F2937]/10 rounded-full flex items-center justify-center mb-3">
-                  <Pill className="w-6 h-6 text-[#1F2937]" />
-                </div>
-                <p className="text-sm font-medium text-[#1F2937] mb-1">Prescriptions</p>
-                <p className="text-xs text-[#6B7280]">2 active</p>
-              </div>
-            </button>
-
             <button
               onClick={onViewConditions}
               className="p-5 bg-white border border-[#E5E7EB] rounded-2xl hover:border-[#1F2937] transition-colors"
