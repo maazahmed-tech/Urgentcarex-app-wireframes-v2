@@ -19,6 +19,14 @@ interface CurrentMedicationsProps {
 
 const FREQUENCIES = ['Once daily', 'Twice daily', 'Three times daily', 'Four times daily', 'As needed', 'Weekly'];
 
+const DOSAGE_QUANTITIES = [
+  '5', '10', '15', '20', '25', '50', '75', '100', '150', '200', '250', '300', '400', '500', '600', '750', '800', '1000', 'Other'
+];
+
+const DOSAGE_UNITS = [
+  'mg', 'mcg', 'ml', 'g', 'IU', 'tablets', 'capsules', 'puffs', 'drops', 'Other'
+];
+
 const MEDICATIONS = [
   'Metformin',
   'Lisinopril',
@@ -76,11 +84,36 @@ export default function CurrentMedications({ onContinue, onSkip, onBack, initial
     frequency: '',
     purpose: ''
   });
+  const [dosageQuantity, setDosageQuantity] = useState('');
+  const [dosageUnit, setDosageUnit] = useState('');
+  const [customQuantity, setCustomQuantity] = useState('');
+  const [customUnit, setCustomUnit] = useState('');
+
+  // Get the effective dosage string
+  const getEffectiveDosage = () => {
+    const qty = dosageQuantity === 'Other' ? customQuantity : dosageQuantity;
+    const unit = dosageUnit === 'Other' ? customUnit : dosageUnit;
+    if (qty && unit) {
+      return `${qty} ${unit}`;
+    }
+    return '';
+  };
+
+  const isDosageValid = () => {
+    const qty = dosageQuantity === 'Other' ? customQuantity : dosageQuantity;
+    const unit = dosageUnit === 'Other' ? customUnit : dosageUnit;
+    return qty && unit;
+  };
 
   const handleAddMedication = () => {
-    if (newMedication.name && newMedication.dosage && newMedication.frequency) {
-      setMedications([...medications, newMedication]);
+    const effectiveDosage = getEffectiveDosage();
+    if (newMedication.name && effectiveDosage && newMedication.frequency) {
+      setMedications([...medications, { ...newMedication, dosage: effectiveDosage }]);
       setNewMedication({ name: '', dosage: '', frequency: '', purpose: '' });
+      setDosageQuantity('');
+      setDosageUnit('');
+      setCustomQuantity('');
+      setCustomUnit('');
       setShowAddModal(false);
       setNoneSelected(false);
     }
@@ -239,13 +272,52 @@ export default function CurrentMedications({ onContinue, onSkip, onBack, initial
                 <label className="text-sm font-medium text-[#374151] mb-2 block">
                   Dosage
                 </label>
-                <input
-                  type="text"
-                  value={newMedication.dosage}
-                  onChange={(e) => setNewMedication({ ...newMedication, dosage: e.target.value })}
-                  placeholder="e.g., 500mg"
-                  className="w-full h-[52px] px-4 rounded-xl border border-[#E5E7EB] text-base"
-                />
+                <div className="flex gap-3">
+                  <div className="flex-1">
+                    <select
+                      value={dosageQuantity}
+                      onChange={(e) => setDosageQuantity(e.target.value)}
+                      className="w-full h-[52px] px-4 rounded-xl border border-[#E5E7EB] text-base bg-white"
+                    >
+                      <option value="">Quantity...</option>
+                      {DOSAGE_QUANTITIES.map(qty => (
+                        <option key={qty} value={qty}>{qty}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="flex-1">
+                    <select
+                      value={dosageUnit}
+                      onChange={(e) => setDosageUnit(e.target.value)}
+                      className="w-full h-[52px] px-4 rounded-xl border border-[#E5E7EB] text-base bg-white"
+                    >
+                      <option value="">Unit...</option>
+                      {DOSAGE_UNITS.map(unit => (
+                        <option key={unit} value={unit}>{unit}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                {/* Custom quantity input when "Other" is selected */}
+                {dosageQuantity === 'Other' && (
+                  <input
+                    type="text"
+                    value={customQuantity}
+                    onChange={(e) => setCustomQuantity(e.target.value)}
+                    placeholder="Enter quantity"
+                    className="w-full h-[52px] px-4 rounded-xl border border-[#E5E7EB] text-base mt-3"
+                  />
+                )}
+                {/* Custom unit input when "Other" is selected */}
+                {dosageUnit === 'Other' && (
+                  <input
+                    type="text"
+                    value={customUnit}
+                    onChange={(e) => setCustomUnit(e.target.value)}
+                    placeholder="Enter unit"
+                    className="w-full h-[52px] px-4 rounded-xl border border-[#E5E7EB] text-base mt-3"
+                  />
+                )}
               </div>
 
               <div>
@@ -282,19 +354,23 @@ export default function CurrentMedications({ onContinue, onSkip, onBack, initial
             </div>
 
             <div className="flex gap-3">
-              <Button 
+              <Button
                 onClick={() => {
                   setShowAddModal(false);
                   setNewMedication({ name: '', dosage: '', frequency: '', purpose: '' });
+                  setDosageQuantity('');
+                  setDosageUnit('');
+                  setCustomQuantity('');
+                  setCustomUnit('');
                 }}
                 variant="outline"
                 className="flex-1 h-[52px] border-[#E5E7EB] text-[#1F2937] rounded-xl text-base font-medium"
               >
                 Cancel
               </Button>
-              <Button 
+              <Button
                 onClick={handleAddMedication}
-                disabled={!newMedication.name || !newMedication.dosage || !newMedication.frequency}
+                disabled={!newMedication.name || !isDosageValid() || !newMedication.frequency}
                 className="flex-1 h-[52px] bg-[#1F2937] text-white rounded-xl text-base font-medium hover:bg-[#374151] disabled:bg-[#E5E7EB] disabled:text-[#9CA3AF]"
               >
                 Add
