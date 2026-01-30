@@ -19,6 +19,48 @@ interface CurrentMedicationsProps {
 
 const FREQUENCIES = ['Once daily', 'Twice daily', 'Three times daily', 'Four times daily', 'As needed', 'Weekly'];
 
+const MEDICATIONS = [
+  'Metformin',
+  'Lisinopril',
+  'Atorvastatin',
+  'Amlodipine',
+  'Omeprazole',
+  'Levothyroxine',
+  'Losartan',
+  'Gabapentin',
+  'Hydrochlorothiazide',
+  'Sertraline',
+  'Simvastatin',
+  'Montelukast',
+  'Escitalopram',
+  'Pantoprazole',
+  'Acetaminophen',
+  'Ibuprofen',
+  'Aspirin',
+  'Prednisone',
+  'Albuterol',
+  'Fluticasone',
+  'Other'
+];
+
+const PURPOSES = [
+  'Diabetes',
+  'Blood Pressure',
+  'Cholesterol',
+  'Heart Health',
+  'Thyroid',
+  'Pain Relief',
+  'Acid Reflux',
+  'Anxiety',
+  'Depression',
+  'Allergies',
+  'Asthma',
+  'Inflammation',
+  'Infection',
+  'Sleep',
+  'Other'
+];
+
 export default function CurrentMedications({ onContinue, onSkip, onBack, initialData = [] }: CurrentMedicationsProps) {
   const [medications, setMedications] = useState<Medication[]>(
     initialData.length > 0 ? initialData : [
@@ -181,13 +223,16 @@ export default function CurrentMedications({ onContinue, onSkip, onBack, initial
                 <label className="text-sm font-medium text-[#374151] mb-2 block">
                   Medication Name
                 </label>
-                <input
-                  type="text"
+                <select
                   value={newMedication.name}
                   onChange={(e) => setNewMedication({ ...newMedication, name: e.target.value })}
-                  placeholder="e.g., Metformin"
-                  className="w-full h-[52px] px-4 rounded-xl border border-[#E5E7EB] text-base"
-                />
+                  className="w-full h-[52px] px-4 rounded-xl border border-[#E5E7EB] text-base bg-white"
+                >
+                  <option value="">Select medication...</option>
+                  {MEDICATIONS.map(med => (
+                    <option key={med} value={med}>{med}</option>
+                  ))}
+                </select>
               </div>
 
               <div>
@@ -210,7 +255,7 @@ export default function CurrentMedications({ onContinue, onSkip, onBack, initial
                 <select
                   value={newMedication.frequency}
                   onChange={(e) => setNewMedication({ ...newMedication, frequency: e.target.value })}
-                  className="w-full h-[52px] px-4 rounded-xl border border-[#E5E7EB] text-base"
+                  className="w-full h-[52px] px-4 rounded-xl border border-[#E5E7EB] text-base bg-white"
                 >
                   <option value="">Select frequency...</option>
                   {FREQUENCIES.map(freq => (
@@ -223,13 +268,16 @@ export default function CurrentMedications({ onContinue, onSkip, onBack, initial
                 <label className="text-sm font-medium text-[#374151] mb-2 block">
                   Purpose (Optional)
                 </label>
-                <input
-                  type="text"
+                <select
                   value={newMedication.purpose}
                   onChange={(e) => setNewMedication({ ...newMedication, purpose: e.target.value })}
-                  placeholder="e.g., Diabetes"
-                  className="w-full h-[52px] px-4 rounded-xl border border-[#E5E7EB] text-base"
-                />
+                  className="w-full h-[52px] px-4 rounded-xl border border-[#E5E7EB] text-base bg-white"
+                >
+                  <option value="">Select purpose...</option>
+                  {PURPOSES.map(purpose => (
+                    <option key={purpose} value={purpose}>{purpose}</option>
+                  ))}
+                </select>
               </div>
             </div>
 
