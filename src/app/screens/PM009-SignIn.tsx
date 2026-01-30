@@ -12,11 +12,11 @@ interface SignInProps {
 }
 
 export default function SignIn({ onSignIn, onForgotPassword, onCreateAccount, onBack }: SignInProps) {
-  const [emailOrPhone, setEmailOrPhone] = useState('demo.patient@urgentcarex.com');
+  const [email, setEmail] = useState('demo.patient@urgentcarex.com');
   const [password, setPassword] = useState('Patient@2026!');
   const [showPassword, setShowPassword] = useState(false);
 
-  const isValid = emailOrPhone.length > 0 && password.length > 0;
+  const isValid = email.length > 0 && email.includes('@') && password.length > 0;
 
   return (
     <div className="flex flex-col h-full bg-white">
@@ -36,19 +36,19 @@ export default function SignIn({ onSignIn, onForgotPassword, onCreateAccount, on
 
         {/* Subhead */}
         <p className="text-base text-[#6B7280] mb-8">
-          Sign in to your account
+          Enter your email to sign in.
         </p>
 
-        {/* Email/Phone Input */}
+        {/* Email Input */}
         <div className="mb-6">
           <Label className="text-sm font-medium text-[#374151] mb-2 block">
-            Email or Phone Number
+            Email
           </Label>
           <Input
-            type="text"
-            placeholder="demo.patient@urgentcarex.com"
-            value={emailOrPhone}
-            onChange={(e) => setEmailOrPhone(e.target.value)}
+            type="email"
+            placeholder="email@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="h-[52px] rounded-xl border-[#E5E7EB] bg-white"
           />
         </div>

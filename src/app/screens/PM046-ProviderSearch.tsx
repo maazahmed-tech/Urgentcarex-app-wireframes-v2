@@ -167,13 +167,11 @@ export default function ProviderSearch({ onSelectProvider, onBack }: ProviderSea
                     {provider.specialty}
                   </p>
                   <div className="flex items-center gap-3">
-                    {provider.type === 'doctor' && (
-                      <div className="flex items-center gap-1">
-                        <Star className="w-4 h-4 fill-[#F59E0B] text-[#F59E0B]" />
-                        <span className="text-sm font-medium text-[#1F2937]">{provider.rating}</span>
-                        <span className="text-sm text-[#6B7280]">({provider.reviewCount})</span>
-                      </div>
-                    )}
+                    <div className="flex items-center gap-1">
+                      <Star className="w-4 h-4 fill-[#F59E0B] text-[#F59E0B]" />
+                      <span className="text-sm font-medium text-[#1F2937]">{provider.rating}</span>
+                      <span className="text-sm text-[#6B7280]">({provider.reviewCount})</span>
+                    </div>
                     <div className="flex items-center gap-1 text-sm text-[#6B7280]">
                       <MapPin className="w-4 h-4" />
                       <span>{provider.distance}</span>

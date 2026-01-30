@@ -1,24 +1,25 @@
-import { useState } from 'react';
 import { Button } from '../components/ui/button';
-import { Checkbox } from '../components/ui/checkbox';
 import { ArrowLeft } from 'lucide-react';
 
 interface ConsentScreenProps {
   onContinue: () => void;
   onBack?: () => void;
-  onViewPrivacy: () => void;
-  onViewHIPAA: () => void;
+  onViewPrivacyPolicy: () => void;
+  onViewTermsOfService: () => void;
+  onViewDataUsage: () => void;
   onViewDisclaimer: () => void;
+  onViewHIPAA: () => void;
 }
 
-export default function ConsentScreen({ 
-  onContinue, 
+export default function ConsentScreen({
+  onContinue,
   onBack,
-  onViewPrivacy,
-  onViewHIPAA,
-  onViewDisclaimer 
+  onViewPrivacyPolicy,
+  onViewTermsOfService,
+  onViewDataUsage,
+  onViewDisclaimer,
+  onViewHIPAA
 }: ConsentScreenProps) {
-  const [agreed, setAgreed] = useState(false);
 
   return (
     <div className="flex flex-col h-full bg-white">
@@ -37,12 +38,54 @@ export default function ConsentScreen({
         <div className="px-8 pt-6">
           {/* Subhead */}
           <p className="text-base text-[#6B7280] mb-8">
-            Please review and accept the following to continue.
+            Please review the following to continue.
           </p>
 
-          {/* HIPAA Card */}
+          {/* Privacy Policy Card */}
           <button
-            onClick={onViewHIPAA}
+            onClick={onViewPrivacyPolicy}
+            className="w-full bg-white border border-[#E5E7EB] rounded-2xl p-5 mb-4 text-left hover:bg-[#F3F4F6] transition-colors"
+          >
+            <div className="flex items-start gap-3">
+              <div className="text-2xl">🔒</div>
+              <div className="flex-1">
+                <h3 className="text-base font-semibold text-[#1F2937] mb-2">
+                  Privacy Policy
+                </h3>
+                <p className="text-sm text-[#6B7280] mb-3">
+                  Learn how we collect, use, and protect your personal information.
+                </p>
+                <div className="text-sm font-medium text-[#1F2937]">
+                  Read Privacy Policy →
+                </div>
+              </div>
+            </div>
+          </button>
+
+          {/* Terms of Service Card */}
+          <button
+            onClick={onViewTermsOfService}
+            className="w-full bg-white border border-[#E5E7EB] rounded-2xl p-5 mb-4 text-left hover:bg-[#F3F4F6] transition-colors"
+          >
+            <div className="flex items-start gap-3">
+              <div className="text-2xl">📄</div>
+              <div className="flex-1">
+                <h3 className="text-base font-semibold text-[#1F2937] mb-2">
+                  Terms of Service
+                </h3>
+                <p className="text-sm text-[#6B7280] mb-3">
+                  Review the terms and conditions for using our services.
+                </p>
+                <div className="text-sm font-medium text-[#1F2937]">
+                  Read Terms of Service →
+                </div>
+              </div>
+            </div>
+          </button>
+
+          {/* How We Use Your Data Card */}
+          <button
+            onClick={onViewDataUsage}
             className="w-full bg-white border border-[#E5E7EB] rounded-2xl p-5 mb-4 text-left hover:bg-[#F3F4F6] transition-colors"
           >
             <div className="flex items-start gap-3">
@@ -52,7 +95,7 @@ export default function ConsentScreen({
                   How We Use Your Data
                 </h3>
                 <p className="text-sm text-[#6B7280] mb-3">
-                  Your health information is protected under HIPAA regulations.
+                  Understand how your health data is stored and processed.
                 </p>
                 <div className="text-sm font-medium text-[#1F2937]">
                   Learn More →
@@ -61,10 +104,10 @@ export default function ConsentScreen({
             </div>
           </button>
 
-          {/* Disclaimer Card */}
+          {/* Important Disclaimer Card */}
           <button
             onClick={onViewDisclaimer}
-            className="w-full bg-white border border-[#E5E7EB] rounded-2xl p-5 mb-8 text-left hover:bg-[#F3F4F6] transition-colors"
+            className="w-full bg-white border border-[#E5E7EB] rounded-2xl p-5 mb-4 text-left hover:bg-[#F3F4F6] transition-colors"
           >
             <div className="flex items-start gap-3">
               <div className="text-2xl">⚠️</div>
@@ -82,28 +125,38 @@ export default function ConsentScreen({
             </div>
           </button>
 
-          {/* Checkbox Agreement */}
-          <div 
-            onClick={() => setAgreed(!agreed)}
-            className="flex items-start gap-3 p-4 bg-white border border-[#E5E7EB] rounded-2xl mb-6 cursor-pointer"
+          {/* HIPAA Notice Card */}
+          <button
+            onClick={onViewHIPAA}
+            className="w-full bg-white border border-[#E5E7EB] rounded-2xl p-5 mb-4 text-left hover:bg-[#F3F4F6] transition-colors"
           >
-            <Checkbox 
-              checked={agreed}
-              onCheckedChange={setAgreed}
-              className="mt-1"
-            />
-            <div className="flex-1">
+            <div className="flex items-start gap-3">
+              <div className="text-2xl">🏥</div>
+              <div className="flex-1">
+                <h3 className="text-base font-semibold text-[#1F2937] mb-2">
+                  HIPAA Notice
+                </h3>
+                <p className="text-sm text-[#6B7280] mb-3">
+                  Your health information is protected under HIPAA regulations.
+                </p>
+                <div className="text-sm font-medium text-[#1F2937]">
+                  View HIPAA Notice →
+                </div>
+              </div>
+            </div>
+          </button>
+
+          {/* Important Notes Section */}
+          <div className="bg-[#FEF3C7] border border-[#F59E0B] rounded-2xl p-5 mt-6 text-center">
+            <h3 className="text-base font-semibold text-[#1F2937] mb-3">
+              Important Notes
+            </h3>
+            <div className="space-y-3">
               <p className="text-sm text-[#1F2937]">
-                I have read and agree to the{' '}
-                <button 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onViewPrivacy();
-                  }}
-                  className="font-medium underline"
-                >
-                  Terms of Service and Privacy Policy
-                </button>
+                Subject to availability and service terms, you may be charged for certain services in the future.
+              </p>
+              <p className="text-sm text-[#1F2937]">
+                When calling a provider, please state <span className="font-semibold">"Customer of UrgentCareX"</span> to receive priority assistance.
               </p>
             </div>
           </div>
@@ -112,10 +165,9 @@ export default function ConsentScreen({
 
       {/* Fixed Bottom Button */}
       <div className="bg-white border-t border-[#E5E7EB] p-4">
-        <Button 
+        <Button
           onClick={onContinue}
-          disabled={!agreed}
-          className="w-full h-[52px] bg-[#1F2937] text-white rounded-xl text-base font-medium hover:bg-[#374151] disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full h-[52px] bg-[#1F2937] text-white rounded-xl text-base font-medium hover:bg-[#374151]"
         >
           I Understand & Agree
         </Button>

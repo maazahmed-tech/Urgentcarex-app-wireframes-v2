@@ -13,10 +13,9 @@ interface SignUpEmailProps {
 }
 
 export default function SignUpEmail({ onContinue, onSignIn, onBack, onViewTerms, onViewPrivacy }: SignUpEmailProps) {
-  const [emailOrPhone, setEmailOrPhone] = useState('demo.patient@urgentcarex.com');
+  const [email, setEmail] = useState('demo.patient@urgentcarex.com');
 
-  const isValid = emailOrPhone.length > 0 && 
-    (emailOrPhone.includes('@') || /^\d{10,}$/.test(emailOrPhone.replace(/\D/g, '')));
+  const isValid = email.length > 0 && email.includes('@');
 
   return (
     <div className="flex flex-col h-full bg-white">
@@ -36,26 +35,31 @@ export default function SignUpEmail({ onContinue, onSignIn, onBack, onViewTerms,
 
         {/* Subhead */}
         <p className="text-base text-[#6B7280] mb-8">
-          Enter your email or phone number to get started.
+          Enter your email to get started.
         </p>
 
         {/* Input */}
-        <div className="mb-8">
+        <div className="mb-4">
           <Label className="text-sm font-medium text-[#374151] mb-2 block">
-            Email or Phone Number
+            Email
           </Label>
           <Input
-            type="text"
-            placeholder="email@example.com or (555) 123-4567"
-            value={emailOrPhone}
-            onChange={(e) => setEmailOrPhone(e.target.value)}
+            type="email"
+            placeholder="email@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="h-[52px] rounded-xl border-[#E5E7EB] bg-white"
           />
         </div>
 
+        {/* Disclaimer */}
+        <p className="text-xs text-[#9CA3AF] mb-8">
+          Note: Your email address cannot be changed after account creation.
+        </p>
+
         {/* Continue Button */}
-        <Button 
-          onClick={() => onContinue(emailOrPhone)}
+        <Button
+          onClick={() => onContinue(email)}
           disabled={!isValid}
           className="w-full h-[52px] bg-[#1F2937] text-white rounded-xl text-base font-medium hover:bg-[#374151] disabled:bg-[#E5E7EB] disabled:text-[#9CA3AF] mb-8"
         >

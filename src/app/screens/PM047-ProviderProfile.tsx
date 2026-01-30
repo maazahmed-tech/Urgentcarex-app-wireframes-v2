@@ -35,7 +35,7 @@ export default function ProviderProfile({ provider, onBookAppointment, onBack }:
       </div>
 
       {/* Content */}
-      <div className={`flex-1 overflow-y-auto ${provider.type === 'doctor' ? 'pb-24' : 'pb-4'}`}> {/* Removed pb-24 since button only shows for doctors */}
+      <div className="flex-1 overflow-y-auto pb-24">
 
         {/* Provider Header */}
         <div className="px-6 py-6">
@@ -50,13 +50,11 @@ export default function ProviderProfile({ provider, onBookAppointment, onBack }:
               <p className="text-base text-[#6B7280] mb-2">
                 {provider.specialty}
               </p>
-              {provider.type === 'doctor' && (
-                <div className="flex items-center gap-1">
-                  <Star className="w-5 h-5 fill-[#F59E0B] text-[#F59E0B]" />
-                  <span className="text-base font-semibold text-[#1F2937]">{provider.rating}</span>
-                  <span className="text-sm text-[#6B7280]">({provider.reviewCount} reviews)</span>
-                </div>
-              )}
+              <div className="flex items-center gap-1">
+                <Star className="w-5 h-5 fill-[#F59E0B] text-[#F59E0B]" />
+                <span className="text-base font-semibold text-[#1F2937]">{provider.rating}</span>
+                <span className="text-sm text-[#6B7280]">({provider.reviewCount} reviews)</span>
+              </div>
             </div>
           </div>
 
@@ -163,7 +161,9 @@ export default function ProviderProfile({ provider, onBookAppointment, onBack }:
 
         {/* Reviews */}
         <div className="px-6 py-6 border-t border-[#E5E7EB]">
-          <h2 className="text-xl font-semibold text-[#1F2937] mb-4">Patient Reviews</h2>
+          <h2 className="text-xl font-semibold text-[#1F2937] mb-4">
+            {provider.type === 'facility' ? 'Facility Reviews' : 'Patient Reviews'}
+          </h2>
           <div className="space-y-4">
             <div className="border border-[#E5E7EB] rounded-xl p-4">
               <div className="flex items-center gap-2 mb-2">
@@ -175,26 +175,60 @@ export default function ProviderProfile({ provider, onBookAppointment, onBack }:
                 <span className="text-sm text-[#6B7280]">2 weeks ago</span>
               </div>
               <p className="text-sm text-[#1F2937] mb-2">
-                "Dr. {provider.name.split(' ')[1]} is an excellent physician. Very thorough and takes time to listen to concerns."
+                {provider.type === 'facility'
+                  ? `"${provider.name} provides excellent care. Clean facility, friendly staff, and minimal wait times."`
+                  : `"Dr. ${provider.name.split(' ')[1]} is an excellent physician. Very thorough and takes time to listen to concerns."`
+                }
               </p>
               <p className="text-xs text-[#6B7280]">- John D.</p>
             </div>
+            {provider.type === 'facility' && (
+              <>
+                <div className="border border-[#E5E7EB] rounded-xl p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="flex">
+                      {[...Array(4)].map((_, i) => (
+                        <Star key={i} className="w-4 h-4 fill-[#F59E0B] text-[#F59E0B]" />
+                      ))}
+                      <Star className="w-4 h-4 text-[#E5E7EB]" />
+                    </div>
+                    <span className="text-sm text-[#6B7280]">1 month ago</span>
+                  </div>
+                  <p className="text-sm text-[#1F2937] mb-2">
+                    "Great urgent care facility. Was seen quickly and the medical team was very professional."
+                  </p>
+                  <p className="text-xs text-[#6B7280]">- Maria S.</p>
+                </div>
+                <div className="border border-[#E5E7EB] rounded-xl p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="flex">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="w-4 h-4 fill-[#F59E0B] text-[#F59E0B]" />
+                      ))}
+                    </div>
+                    <span className="text-sm text-[#6B7280]">2 months ago</span>
+                  </div>
+                  <p className="text-sm text-[#1F2937] mb-2">
+                    "Highly recommend this facility. Modern equipment and caring healthcare providers."
+                  </p>
+                  <p className="text-xs text-[#6B7280]">- Robert K.</p>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Fixed Bottom Button - Only for Doctors */}
-      {provider.type === 'doctor' && (
-        <div className="bg-white border-t border-[#E5E7EB] p-4">
-          <Button 
-            onClick={onBookAppointment}
-            className="w-full h-[52px] bg-[#1F2937] text-white rounded-xl text-base font-medium hover:bg-[#374151]"
-          >
-            <Calendar className="w-5 h-5 mr-2" />
-            Book Appointment
-          </Button>
-        </div>
-      )}
+      {/* Fixed Bottom Button */}
+      <div className="bg-white border-t border-[#E5E7EB] p-4">
+        <Button
+          onClick={onBookAppointment}
+          className="w-full h-[52px] bg-[#1F2937] text-white rounded-xl text-base font-medium hover:bg-[#374151]"
+        >
+          <Calendar className="w-5 h-5 mr-2" />
+          Book Appointment
+        </Button>
+      </div>
     </div>
   );
 }

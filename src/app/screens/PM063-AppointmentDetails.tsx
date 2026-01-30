@@ -1,5 +1,5 @@
 import { Button } from '../components/ui/button';
-import { ArrowLeft, Calendar, Clock, CheckCircle, MessageSquare, FileText, ClipboardList } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, CheckCircle, MessageSquare, FileText, ClipboardList, Building2 } from 'lucide-react';
 import { QUESTIONNAIRE_NAME } from '../constants/questionnaire';
 
 interface Appointment {
@@ -8,8 +8,9 @@ interface Appointment {
   specialty: string;
   date: string;
   time: string;
-  status: 'confirmed' | 'pending' | 'completed';
+  status: 'confirmed' | 'pending' | 'completed' | 'cancelled';
   rosCompleted?: boolean;
+  type?: 'doctor' | 'facility';
 }
 
 interface AppointmentDetailsProps {
@@ -19,20 +20,23 @@ interface AppointmentDetailsProps {
   onMarkComplete?: () => void;
   onLeaveReview?: () => void;
   onCompleteROS?: () => void;
+  onRebook?: () => void;
   onBack: () => void;
 }
 
-export default function AppointmentDetails({ 
-  appointment, 
-  onReschedule, 
-  onCancel, 
+export default function AppointmentDetails({
+  appointment,
+  onReschedule,
+  onCancel,
   onMarkComplete,
   onLeaveReview,
   onCompleteROS,
-  onBack 
+  onRebook,
+  onBack
 }: AppointmentDetailsProps) {
   const isConfirmed = appointment.status === 'confirmed';
   const isCompleted = appointment.status === 'completed';
+  const isCancelled = appointment.status === 'cancelled';
 
   // Mock ROS summary data - would come from backend in real app
   const rosSummary = [
@@ -60,9 +64,23 @@ export default function AppointmentDetails({
       <div className="flex-1 overflow-y-auto pb-24">
         {/* Provider Info */}
         <div className="px-6 py-6 border-b border-[#E5E7EB]">
+          {/* Type Badge */}
+          <div className="flex items-center gap-2 mb-4">
+            {appointment.type === 'facility' ? (
+              <div className="flex items-center gap-1.5 px-2.5 py-1 bg-[#1F2937]/5 rounded-full">
+                <Building2 className="w-3.5 h-3.5 text-[#1F2937]" />
+                <span className="text-xs font-medium text-[#1F2937]">Facility</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-1.5 px-2.5 py-1 bg-[#10B981]/10 rounded-full">
+                <span className="text-xs font-medium text-[#10B981]">Individual Doctor</span>
+              </div>
+            )}
+          </div>
+
           <div className="flex items-start gap-4 mb-4">
             <div className="w-16 h-16 bg-[#F3F4F6] rounded-full flex items-center justify-center text-3xl">
-              👨‍⚕️
+              {appointment.type === 'facility' ? '🏥' : '👨‍⚕️'}
             </div>
             <div className="flex-1">
               <h3 className="text-xl font-bold text-[#1F2937] mb-1">
@@ -74,15 +92,18 @@ export default function AppointmentDetails({
               <div className={`inline-flex px-3 py-1 ${
                 appointment.status === 'confirmed' ? 'bg-[#6B7280]' :
                 appointment.status === 'pending' ? 'bg-[#9CA3AF]' :
+                appointment.status === 'cancelled' ? 'bg-[#EF4444]' :
                 'bg-[#1F2937]'
               }/10 rounded-full`}>
                 <p className={`text-sm font-medium ${
                   appointment.status === 'confirmed' ? 'text-[#6B7280]' :
                   appointment.status === 'pending' ? 'text-[#9CA3AF]' :
+                  appointment.status === 'cancelled' ? 'text-[#EF4444]' :
                   'text-[#1F2937]'
                 }`}>
                   {appointment.status === 'confirmed' ? 'Confirmed' :
                    appointment.status === 'pending' ? 'Pending Confirmation' :
+                   appointment.status === 'cancelled' ? 'Cancelled' :
                    'Completed'}
                 </p>
               </div>
@@ -140,9 +161,20 @@ export default function AppointmentDetails({
 
         {/* Action Buttons */}
         <div className="px-6 pt-2 pb-6 space-y-3">
-          {/* Complete ROS - Only for appointments without ROS completed */}
-          {!appointment.rosCompleted && !isCompleted && onCompleteROS && (
-            <Button 
+          {/* Rebook - Only for Cancelled */}
+          {isCancelled && onRebook && (
+            <Button
+              onClick={onRebook}
+              className="w-full h-[52px] bg-[#1F2937] text-white rounded-xl text-base font-medium hover:bg-[#374151] flex items-center justify-center gap-2"
+            >
+              <Calendar className="w-5 h-5" />
+              Rebook Appointment
+            </Button>
+          )}
+
+          {/* Complete ROS - Only for appointments without ROS completed, not cancelled */}
+          {!appointment.rosCompleted && !isCompleted && !isCancelled && onCompleteROS && (
+            <Button
               onClick={onCompleteROS}
               className="w-full h-[52px] bg-[#1F2937] text-white rounded-xl text-base font-medium hover:bg-[#374151] flex items-center justify-center gap-2"
             >
@@ -153,7 +185,7 @@ export default function AppointmentDetails({
 
           {/* Mark as Complete - Only for Confirmed */}
           {isConfirmed && onMarkComplete && (
-            <Button 
+            <Button
               onClick={onMarkComplete}
               className="w-full h-[52px] bg-[#6B7280] text-white rounded-xl text-base font-medium hover:bg-[#4B5563] flex items-center justify-center gap-2"
             >
@@ -164,7 +196,7 @@ export default function AppointmentDetails({
 
           {/* Leave Review - Only for Completed */}
           {isCompleted && onLeaveReview && (
-            <Button 
+            <Button
               onClick={onLeaveReview}
               className="w-full h-[52px] bg-[#1F2937] text-white rounded-xl text-base font-medium hover:bg-[#374151] flex items-center justify-center gap-2"
             >
@@ -173,9 +205,9 @@ export default function AppointmentDetails({
             </Button>
           )}
 
-          {/* Reschedule - Not available for Completed */}
-          {!isCompleted && (
-            <Button 
+          {/* Reschedule - Not available for Completed or Cancelled */}
+          {!isCompleted && !isCancelled && (
+            <Button
               onClick={onReschedule}
               variant="outline"
               className="w-full h-[52px] border-[#E5E7EB] text-[#1F2937] rounded-xl text-base font-medium hover:bg-[#F3F4F6]"
@@ -185,9 +217,9 @@ export default function AppointmentDetails({
             </Button>
           )}
 
-          {/* Cancel - Not available for Completed */}
-          {!isCompleted && (
-            <Button 
+          {/* Cancel - Not available for Completed or Cancelled */}
+          {!isCompleted && !isCancelled && (
+            <Button
               onClick={onCancel}
               variant="outline"
               className="w-full h-[52px] border-[#EF4444] text-[#EF4444] rounded-xl text-base font-medium hover:bg-[#EF4444]/5"

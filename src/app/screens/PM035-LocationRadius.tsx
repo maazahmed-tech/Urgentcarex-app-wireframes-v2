@@ -11,7 +11,9 @@ interface LocationRadiusProps {
 export default function LocationRadius({ onContinue, onBack, initialData }: LocationRadiusProps) {
   const [radius, setRadius] = useState(initialData || 10);
 
-  const radiusOptions = [5, 10, 15, 25, 50];
+  const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRadius(Number(e.target.value));
+  };
 
   const handleContinue = () => {
     onContinue(radius);
@@ -39,37 +41,44 @@ export default function LocationRadius({ onContinue, onBack, initialData }: Loca
             How far are you willing to travel for care?
           </p>
 
-          {/* Radius Selection */}
+          {/* Radius Slider */}
           <div className="mb-8">
-            <p className="text-sm font-medium text-[#374151] mb-4">
-              Search within:
-            </p>
-            <div className="space-y-3">
-              {radiusOptions.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => setRadius(option)}
-                  className={`w-full h-[60px] rounded-xl border-2 transition-all ${
-                    radius === option
-                      ? 'border-[#1F2937] bg-[#F3F4F6]'
-                      : 'border-[#E5E7EB] bg-white hover:bg-[#F3F4F6]'
-                  }`}
-                >
-                  <div className="flex items-center justify-between px-5">
-                    <div className="flex items-center gap-3">
-                      <MapPin className={`w-5 h-5 ${radius === option ? 'text-[#1F2937]' : 'text-[#6B7280]'}`} />
-                      <span className={`text-base font-medium ${radius === option ? 'text-[#1F2937]' : 'text-[#374151]'}`}>
-                        {option} miles
-                      </span>
-                    </div>
-                    {radius === option && (
-                      <div className="w-6 h-6 bg-[#1F2937] rounded-full flex items-center justify-center">
-                        <span className="text-white text-sm">✓</span>
-                      </div>
-                    )}
-                  </div>
-                </button>
-              ))}
+            {/* Current Value Display */}
+            <div className="text-center mb-6">
+              <span className="text-4xl font-bold text-[#1F2937]">{radius}</span>
+              <span className="text-xl text-[#6B7280] ml-2">miles</span>
+            </div>
+
+            {/* Slider */}
+            <div className="px-2">
+              <input
+                type="range"
+                min="5"
+                max="50"
+                step="5"
+                value={radius}
+                onChange={handleSliderChange}
+                className="w-full h-2 bg-[#E5E7EB] rounded-full appearance-none cursor-pointer
+                  [&::-webkit-slider-thumb]:appearance-none
+                  [&::-webkit-slider-thumb]:w-6
+                  [&::-webkit-slider-thumb]:h-6
+                  [&::-webkit-slider-thumb]:rounded-full
+                  [&::-webkit-slider-thumb]:bg-[#1F2937]
+                  [&::-webkit-slider-thumb]:cursor-pointer
+                  [&::-webkit-slider-thumb]:shadow-md
+                  [&::-moz-range-thumb]:w-6
+                  [&::-moz-range-thumb]:h-6
+                  [&::-moz-range-thumb]:rounded-full
+                  [&::-moz-range-thumb]:bg-[#1F2937]
+                  [&::-moz-range-thumb]:border-0
+                  [&::-moz-range-thumb]:cursor-pointer
+                  [&::-moz-range-thumb]:shadow-md"
+              />
+              {/* Min/Max Labels */}
+              <div className="flex justify-between mt-2">
+                <span className="text-sm text-[#6B7280]">5 mi</span>
+                <span className="text-sm text-[#6B7280]">50 mi</span>
+              </div>
             </div>
           </div>
 
@@ -87,7 +96,7 @@ export default function LocationRadius({ onContinue, onBack, initialData }: Loca
 
       {/* Fixed Bottom Button */}
       <div className="bg-white border-t border-[#E5E7EB] p-4">
-        <Button 
+        <Button
           onClick={handleContinue}
           className="w-full h-[52px] bg-[#1F2937] text-white rounded-xl text-base font-medium hover:bg-[#374151]"
         >
