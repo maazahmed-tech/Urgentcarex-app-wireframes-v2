@@ -1,5 +1,5 @@
 import { Button } from '../components/ui/button';
-import { ArrowLeft, Star, MapPin, Clock, Award, Calendar, Building2, Phone, Globe } from 'lucide-react';
+import { ArrowLeft, Star, MapPin, Clock, Award, Calendar, Building2, Phone, Globe, Check } from 'lucide-react';
 
 interface Provider {
   id: string;
@@ -16,6 +16,8 @@ interface Provider {
   facilityType?: string;
   servicesCount?: number;
   hoursToday?: string;
+  acceptsInsurance?: boolean; // Only for facilities
+  waitTime?: number; // Wait time in minutes - Only for facilities
 }
 
 interface ProviderProfileProps {
@@ -25,6 +27,9 @@ interface ProviderProfileProps {
 }
 
 export default function ProviderProfile({ provider, onBookAppointment, onBack }: ProviderProfileProps) {
+  // Simulating user has insurance saved (set to false to test "Add insurance" prompt)
+  const userHasInsurance = true;
+
   return (
     <div className="flex flex-col h-full bg-white">
       {/* Header */}
@@ -58,9 +63,27 @@ export default function ProviderProfile({ provider, onBookAppointment, onBack }:
             </div>
           </div>
 
-          {/* Removed Quick Info cards (Distance and Next Available) */}
-
-          {/* Removed "Accepting new patients" badge */}
+          {/* Insurance Status - Only for facilities */}
+          {provider.type === 'facility' && (
+            <div className="mt-4">
+              {userHasInsurance && provider.acceptsInsurance && (
+                <div className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#ECFDF5] rounded-xl">
+                  <Check className="w-5 h-5 text-[#059669]" />
+                  <span className="text-base font-semibold text-[#059669]">Insurance Accepted</span>
+                </div>
+              )}
+              {userHasInsurance && provider.acceptsInsurance === false && (
+                <div className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#FEF2F2] rounded-xl">
+                  <span className="text-base font-semibold text-[#DC2626]">Insurance Not Accepted</span>
+                </div>
+              )}
+              {!userHasInsurance && (
+                <div className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#FEF3C7] rounded-xl">
+                  <span className="text-base font-semibold text-[#D97706]">Add insurance to check coverage</span>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* About */}
@@ -116,6 +139,16 @@ export default function ProviderProfile({ provider, onBookAppointment, onBack }:
                   <p className="text-sm text-[#6B7280]">{provider.hoursToday || 'Open 8:00 AM - 8:00 PM'}</p>
                 </div>
               </div>
+              {provider.waitTime !== undefined && (
+                <div className="flex items-start gap-3">
+                  <Clock className="w-5 h-5 text-[#1F2937] mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium text-[#1F2937]">Estimated Wait Time</p>
+                    <p className="text-sm text-[#6B7280]">~{provider.waitTime} minutes</p>
+                    <p className="text-xs text-[#9CA3AF] mt-1">Wait times are estimates and may vary due to walk-ins, emergencies, or other factors.</p>
+                  </div>
+                </div>
+              )}
               <div className="flex items-start gap-3">
                 <Building2 className="w-5 h-5 text-[#1F2937] mt-0.5" />
                 <div>
