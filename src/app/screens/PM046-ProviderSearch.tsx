@@ -48,7 +48,7 @@ const DEMO_PROVIDERS: Provider[] = [
     type: 'doctor',
     name: 'Dr. Sarah Johnson',
     specialty: 'Primary Care Physician',
-    rating: 4.9,
+    rating: 4.2,
     reviewCount: 127,
     distance: '2.3 miles',
     nextAvailable: 'Today at 2:00 PM',
@@ -61,7 +61,7 @@ const DEMO_PROVIDERS: Provider[] = [
     name: 'Memorial Medical Center',
     specialty: 'Hospital',
     facilityType: 'Hospital',
-    rating: 4.5,
+    rating: 4.9,
     reviewCount: 856,
     distance: '2.8 miles',
     nextAvailable: 'Emergency 24/7',
@@ -77,7 +77,7 @@ const DEMO_PROVIDERS: Provider[] = [
     type: 'doctor',
     name: 'Dr. Michael Chen',
     specialty: 'Internal Medicine',
-    rating: 4.8,
+    rating: 4.6,
     reviewCount: 95,
     distance: '3.1 miles',
     nextAvailable: 'Tomorrow at 10:00 AM',
@@ -90,7 +90,7 @@ const DEMO_PROVIDERS: Provider[] = [
     name: 'QuickCare Walk-In Clinic',
     specialty: 'Walk-In Clinic',
     facilityType: 'Walk-In Clinic',
-    rating: 4.6,
+    rating: 4.8,
     reviewCount: 215,
     distance: '3.5 miles',
     nextAvailable: 'No Appointment Needed',
@@ -106,7 +106,7 @@ const DEMO_PROVIDERS: Provider[] = [
     type: 'doctor',
     name: 'Dr. Emily Rodriguez',
     specialty: 'Family Medicine',
-    rating: 4.9,
+    rating: 4.1,
     reviewCount: 143,
     distance: '4.5 miles',
     nextAvailable: 'Today at 4:30 PM',
@@ -122,20 +122,22 @@ export default function ProviderSearch({ onSelectProvider, onBack }: ProviderSea
   // Simulating user has insurance saved (set to false to test "Add insurance" prompt)
   const userHasInsurance = true;
 
-  // Filter providers based on active tab
-  const filteredProviders = providers.filter(provider => {
-    // Filter by tab
-    if (activeTab === 'facilities' && provider.type !== 'facility') return false;
-    if (activeTab === 'doctors' && provider.type !== 'doctor') return false;
+  // Filter providers based on active tab and sort by rating (highest first)
+  const filteredProviders = providers
+    .filter(provider => {
+      // Filter by tab
+      if (activeTab === 'facilities' && provider.type !== 'facility') return false;
+      if (activeTab === 'doctors' && provider.type !== 'doctor') return false;
 
-    // Insurance tab: only show facilities that accept insurance
-    if (activeTab === 'insurance') {
-      if (provider.type !== 'facility') return false;
-      if (!provider.acceptsInsurance) return false;
-    }
+      // Insurance tab: only show facilities that accept insurance
+      if (activeTab === 'insurance') {
+        if (provider.type !== 'facility') return false;
+        if (!provider.acceptsInsurance) return false;
+      }
 
-    return true;
-  });
+      return true;
+    })
+    .sort((a, b) => b.rating - a.rating);
 
   return (
     <div className="flex flex-col h-full bg-white">
