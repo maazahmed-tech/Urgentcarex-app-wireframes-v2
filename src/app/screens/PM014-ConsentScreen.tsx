@@ -158,6 +158,9 @@ export default function ConsentScreen({
               <p className="text-sm text-[#1F2937]">
                 When calling a provider, please state <span className="font-semibold">"Customer of UrgentCareX"</span> to receive priority assistance.
               </p>
+              <p className="text-sm text-[#1F2937]">
+                Wait times are estimates and may change due to new arrivals, walk-ins, or other real-time factors at the facility.
+              </p>
             </div>
           </div>
         </div>
